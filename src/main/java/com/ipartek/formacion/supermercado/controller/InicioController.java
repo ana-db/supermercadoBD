@@ -32,6 +32,8 @@ public class InicioController extends HttpServlet {
 		dao = ProductoDAO.getInstance();
 		
 		//public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento)
+		/*
+		 * con BD: comentamos el creado de objetos porque si no, cada vez que nos conectamos a la aplicacion se crean más productos y se guardan en la base de datos
 		try {
 			dao.create(new Producto(1, "Turrón", 2, "https://supermercado.eroski.es/images/17930009.jpg", "Turrón duro EROSKI, caja 250 g", 0));
 			dao.create(new Producto(2, "Gulas", 8.65f, "https://supermercado.eroski.es/images/19780345.jpg", "Gulas del norte congeladas LA GULA DEL NORTE, bandeja 430 g", 20));
@@ -47,6 +49,7 @@ public class InicioController extends HttpServlet {
 		} catch (Exception e) {
 			LOG.warn(e);		
 		}
+		*/
 
 	}
 	
