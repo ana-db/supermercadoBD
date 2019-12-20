@@ -43,27 +43,6 @@
 	            </div>            
         	
         	</c:forEach>
-        	
-        	
-        	
-            
-        <!-- ----------------------------------------------- -->
-        
-        <%
-			ArrayList<Producto> productos = (ArrayList<Producto>)request.getAttribute("productos");
-		%>
-    
-    	<ul>
-			<% for ( Producto p : productos ){ %>
-			
-				<li>
-					<%=p.getId()%> - <%=p.getNombre()%> - <%=p.getPrecio()%> 
-					<img src="<%=p.getImagen()%>" style="width:100px; height: 100px;" alt="foto del producto">
-					<%=p.getDescripcion()%> - <%=p.getDescuento()%> 
-				</li>
-				
-			<% } %>
-		</ul>
         
         
         
