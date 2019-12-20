@@ -1,0 +1,170 @@
+/* 
+1- reset
+2- normalize
+3- etiquetas
+4- animaciones
+5- layouts
+6- clases
+7- custom
+8- media
+*/
+
+
+nav, footer, .footer-wrapper{
+    background-color: #DDD;
+}
+
+
+
+main{
+    min-height: 70vh;
+}
+
+#btn-top{
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+@media (min-width: 576px) { 
+
+    #btn-top{
+        display: none;
+    }    
+
+ }
+
+
+/* contenedor-productos
+**********************************************/
+.contenedor-productos{
+    margin: 2rem 0;
+}
+
+.contenedor-productos > div {
+    width: 100%;
+}
+
+
+
+@media (min-width: 576px) { 
+
+    .contenedor-productos > div {
+        width: 20%;
+    }    
+
+ }
+
+
+
+/* producto
+*******************************************/
+
+.producto{
+    width: 200px;
+    border: 1px solid #F0F0F0;
+    position: relative;
+}
+
+.producto .descuento{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: rgb(237, 90, 90);
+    color: #FFF;
+    padding: 0 10px;
+    border-radius: 20px;
+}
+
+.producto img{
+ 	width: auto;
+    height: 200px;
+    margin: auto;
+    display: block;
+}
+
+.producto .body{
+    padding: 0 0.75rem;
+
+}
+
+.producto .precio-descuento{
+    text-decoration-line: line-through;
+    color: #837c7c;
+    font-weight: 100;
+}
+
+.producto .precio-original{
+    color: rgb(237, 90, 90);
+    font-weight: 900;
+}
+
+.producto .descripcion {
+    font-size: 0.8em;
+}
+
+.producto .botones{
+    padding: 0 1.8rem;
+    margin: 20px auto;
+    display: flex;    
+}
+
+
+
+.producto .botones button{
+    width: 30%;
+    background-color: #f7f7f7;
+    margin: 0;
+    border: none;    
+    border-top: 2px solid #DDD;
+    border-bottom: 2px solid #DDD;
+}    
+
+.producto .botones button:hover{
+    cursor: pointer;
+    background-color: rgb(237, 90, 90);
+}
+
+
+.producto .botones .minus{    
+    padding-right: 0;
+    text-align: center;   
+    border-left: 2px solid #DDD;
+    border-radius: 50% 0 0 50% ;
+}    
+
+.producto .botones .plus{
+    padding-left: 0;
+    text-align: center;  
+    border-right: 2px solid #DDD;    
+    border-radius: 0 50% 50% 0 ;
+}    
+
+.producto .botones input{
+    margin: 0;
+    width: 30%;
+    background-color: #f7f7f7;
+    border: none;
+    border-top: 2px solid #DDD;
+    border-bottom: 2px solid #DDD;
+    text-align: center;
+}   
+
+.producto button.carro{
+    background-color: #8c8;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+    padding: 20px;
+    width: 100%;
+}
+
+
+.producto .descripcion {
+    min-height: 60px;
+}
+
+.imagen_producto_tabla {
+	width: 10em;
+}

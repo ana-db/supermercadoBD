@@ -1,0 +1,39 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	
+	<!-- indicamos cuál va a ser la página de inicio al entrar en nuestra web -->
+	<!-- también podemos poner la url de un controlador -->
+	<welcome-file-list>
+		<welcome-file>inicio</welcome-file>
+	</welcome-file-list>
+	
+	<!-- 
+		páginas de errores para los controladores
+		en los JSPs hay que indicar con una directiva cuál es la página a la que tiene que ir en caso de error
+	
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/pagina404.jsp</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error500.jsp</location>
+	</error-page>
+	
+	 también se pueden poner Exceptions
+	<error-page>
+		<exception-type>java.lang.NullPointerException</exception-type>
+		<location>/error500.jsp</location>
+	</error-page>
+	
+	
+	-->
+	
+	<!-- esta página de errores es para servlets. En los jsps añadiremos: page errorPage="error.jsp" -->
+	
+</web-app>
