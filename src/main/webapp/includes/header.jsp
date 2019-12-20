@@ -20,7 +20,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Ana">
-		<title>Supermercado</title>
+		<title>Supermercado BD</title>
 		
 		<!-- la base para construir todas las rutas de esta página -->
 	    <base href="${pageContext.request.contextPath}/" /> <!-- coge directamente el servidor, el puerto y el nombre del proyecto. Añadimos la barra -->

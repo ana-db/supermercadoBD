@@ -9,21 +9,6 @@
 	<a href="seguridad/productos?accion=formulario">Nuevo Producto</a>
 		
 	
-	<ol>
-		<c:forEach items="${productos}" var="p">
-			<li>
-				${p} <br>
-				<a href="seguridad/productos?accion=formulario&id=${p.id}">Editar</a>
-			</li>
-		</c:forEach>
-	</ol>
-	
-	<!-- ${productos} -->
-	
-	<!-- ------------------------------------------- -->
-	
-
-	
 	<style>
 
 		 .foto-perfil-producto {
