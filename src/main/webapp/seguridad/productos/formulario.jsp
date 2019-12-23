@@ -5,10 +5,8 @@
  
 	<h1>Formulario</h1>
 	
-	usar este atributo para rellenar los values del formulario
 	
-	${producto}
-	
+	<!-- ${producto}  -->	
 	<!-- ------------------------------------------------------------------------------- -->
 	
 	
@@ -38,7 +36,8 @@
 	        <small id="idHelp" class="form-text text-muted">Identificador del producto</small>
 		</div>
 
-	    <div class="form-group">
+
+		<div class="form-group">
 	        <label for="nombre">Producto</label>
 	        <input type="text" 
 	               class="form-control" 
@@ -46,12 +45,15 @@
 	               required
 	               value = "${producto.nombre}"
 	               placeholder="Mínimo 2 Máximo 150 caracteres"
-	               pattern=".{2,150}"
 	               aria-describedby="nombreHelp">
 	        <small id="nombreHelp" class="form-text text-muted">Nombre del producto</small>
-	    </div>
-	    
-	    <div class="form-group">
+	    </div>	   
+	    <!-- 
+	    	quitamos pattern=".{2,150}" para controlarlo en el controlador con las funciones de validación
+	     -->
+
+
+		<div class="form-group">
 	        <label for="precio">Precio</label>
 	        <input type="number" 
 	               class="form-control" 
@@ -61,7 +63,7 @@
 	               placeholder="Precio en euros sin descuento"
 	               pattern="[0-9]"
 	               min="0" max="100"
-	               step="0.5"
+	               step="0.1"
 	               aria-describedby="precioHelp">
 	        <small id="precioHelp" class="form-text text-muted">Precio en euros sin descuento</small>
 		</div>

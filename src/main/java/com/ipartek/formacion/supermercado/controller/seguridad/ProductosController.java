@@ -1,6 +1,7 @@
 package com.ipartek.formacion.supermercado.controller.seguridad;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -8,6 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.log4j.Logger;
 
@@ -37,8 +42,14 @@ public class ProductosController extends HttpServlet {
 	public static final String ACCION_IR_FORMULARIO = "formulario";
 	public static final String ACCION_GUARDAR = "guardar"; // crear y modificar
 	public static final String ACCION_ELIMINAR = "eliminar";
+	
+	
+	//Crear Factoria y Validador:
+	ValidatorFactory factory;
+	Validator validator;
+	 
 
-	// variables:
+	// variables parámetros:
 	String pAccion;
 	String pId;
 	String pNombre;
@@ -52,12 +63,19 @@ public class ProductosController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		dao = ProductoDAO.getInstance();
+		
+		//para inicializar validaciones de parámetros:
+		factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
 	}
 
 	@Override
 	public void destroy() {
 		super.destroy();
 		dao = null;
+		
+		factory = null;
+		validator = null;
 	}
 
 	/**
@@ -120,7 +138,6 @@ public class ProductosController extends HttpServlet {
 			// request.setAttribute("productos", dao.getAll());
 
 		} catch (Exception e) {
-			// TODO log
 			LOG.warn("Ha habido algún problema");
 			e.printStackTrace();
 		} finally {
@@ -171,29 +188,31 @@ public class ProductosController extends HttpServlet {
 		
 		
 		//nombre más de 2 y menos de 150
-		if (pNombre != null && pNombre.length() >= 2 && pNombre.length() <= 50) {
+		Set<ConstraintViolation<Producto>> validaciones = validator.validate(producto); //if (pNombre != null && pNombre.length() >= 2 && pNombre.length() <= 50)
+		
+		if (validaciones.size() > 0) {
 			
+			mensajeValidacion(request, validaciones);
+			
+		} else {
 			try {
-				
+							
 				if ( pId > 0 ) {  //modificar un producto existente
 					LOG.trace("Modificar datos del producto");
+										
 					dao.update(producto, pId);		
 					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
 					
 				}else {  //crear nuevo producto
 					LOG.trace("Crear un registro un producto nuevo");
+										
 					dao.create(producto);
 					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
 				}
-				
+							
 			} catch (Exception e){
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));
 			}
-		}
-		else { // validación de campos del formulario incorrectos
-			
-			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El nombre debe ser entre 2 y 50 caratcteres"));
-						
 		}
 			
 		request.setAttribute("productos", dao.getAll()); // devuelve el dao con todos sus parámetros
@@ -202,7 +221,24 @@ public class ProductosController extends HttpServlet {
 	}
 
 	
+	private void mensajeValidacion(HttpServletRequest request, Set<ConstraintViolation<Producto>> validaciones) {
+		
+		StringBuilder mensaje = new StringBuilder();
+		for (ConstraintViolation<Producto> cv : validaciones) {
+			
+			mensaje.append("<p>");
+			mensaje.append(cv.getPropertyPath()).append(": ");
+			mensaje.append(cv.getMessage()); //nos devuelve el mensaje
+			mensaje.append("</p>");
+		}
+		// validación de campos del formulario incorrectos
+		request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, mensaje.toString()));
+		
+	}
+	
+
 	private void eliminar(HttpServletRequest request, HttpServletResponse response) {
+		
 		// recibimos parámetros:
 		int pId = (request.getParameter("id") == null) ? 0 : Integer.parseInt(request.getParameter("id"));
 
@@ -213,7 +249,7 @@ public class ProductosController extends HttpServlet {
 			try {
 				dao.delete(pId);
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Has comprado " + producto.getNombre() + " Gracias"));
-				LOG.info(producto.getNombre() + " ha sido comprado");
+				LOG.info("Se ha comprado " + producto.getNombre());
 			} catch (Exception e) {
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede comprar este producto"));
 			}

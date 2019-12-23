@@ -16,11 +16,11 @@ public class ProductoDAO implements IDAO<Producto>{
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	private static final String SQL_GET_ALL = "SELECT id, nombre FROM producto ORDER BY id DESC LIMIT 500;";
-	private static final String SQL_INSERT = "INSERT INTO producto (nombre) VALUES (?);";
-	private static final String SQL_GET_BY_ID = "SELECT id, nombre FROM producto WHERE id = ?;";
+	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
+	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
+	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
-	private static final String SQL_UPDATE = "UPDATE producto SET nombre= ? WHERE id = ?;";
+	private static final String SQL_UPDATE = "UPDATE producto SET nombre= ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
 
 	
 	private ProductoDAO() {
@@ -52,6 +52,7 @@ public class ProductoDAO implements IDAO<Producto>{
 				Producto p = new Producto();
 				p.setId( rs.getInt("id"));
 				p.setNombre(rs.getString("nombre"));
+				p.setImagen(rs.getString("imagen"));
 				lista.add(p);
 
 			}
@@ -69,6 +70,7 @@ public class ProductoDAO implements IDAO<Producto>{
 		//establecemos conexión:
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
 			pst.setString(1, pojo.getNombre()); //1er interrogante con el nombre del registro que se quiere modificar; en ese caso, Nombre
+			pst.setString(2, pojo.getImagen());
 			
 			int affectedRows = pst.executeUpdate();
 			if (affectedRows == 1) { //queremos modificar un registro, así que afectará a 1 fila
@@ -105,6 +107,7 @@ public class ProductoDAO implements IDAO<Producto>{
 					registro = new Producto();
 					registro.setId(rs.getInt("id"));
 					registro.setNombre(rs.getString("nombre"));
+					registro.setImagen(rs.getString("imagen"));
 				}
 			}
 		} catch (Exception e) {
@@ -148,6 +151,7 @@ public class ProductoDAO implements IDAO<Producto>{
 
 			pst.setString(1, pojo.getNombre());
 			pst.setInt(2, id);
+			pst.setString(3, pojo.getImagen());
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
@@ -161,23 +165,6 @@ public class ProductoDAO implements IDAO<Producto>{
 		}
 		 
 		return pojo;
-	}
-
-		
-	private Producto mapper(ResultSet rs) throws SQLException {
-		
-		Producto p = new Producto();
-		p.setId(rs.getInt("id"));
-		p.setNombre(rs.getString("nombre"));
-			
-		/*
-		Rol rol = new Rol();
-		rol.setId( rs.getInt("id_rol"));
-		rol.setNombre( rs.getString("nombre_rol"));
-		p.setRol(rol);
-		*/
-		
-		return p;
 	}
 
 }

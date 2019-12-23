@@ -1,15 +1,32 @@
 package com.ipartek.formacion.supermercado.modelo.pojo;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 public class Producto {
 	
 	public static final int DESCUENTO_MIN = 0;
 	public static final int DESCUENTO_MAX = 100;
 	
 	private int id;
+	
+	@NotNull //validaciones a nivel de pojo
+	@NotBlank
+	@Size(min = 2, max = 50)
 	private String nombre;
+	
 	private float precio;
 	private String imagen;
+	
+	@Size(min = 2, max = 150)
 	private String descripcion;
+	
+	@Min(0)
+	@Max(100)
 	private int descuento;
 	 
 	
