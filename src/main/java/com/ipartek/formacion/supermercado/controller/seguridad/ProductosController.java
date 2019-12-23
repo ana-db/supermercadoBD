@@ -48,7 +48,6 @@ public class ProductosController extends HttpServlet {
 	String pDescuento;
 	
 	
-
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -92,8 +91,7 @@ public class ProductosController extends HttpServlet {
 		pDescripcion = request.getParameter("descripcion");
 		pDescuento = request.getParameter("descuento");
 
-		isRedirect = false;
-
+		
 		try {
 			// lógica de negocio
 
@@ -127,27 +125,15 @@ public class ProductosController extends HttpServlet {
 			e.printStackTrace();
 		} finally {
 			// ir a JSP:
-			
-
-			//if (isRedirect) {
-		//		response.sendRedirect("/seguridad/productos?accion=listar");
-		//	} else {
-				request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
-		//	}
+			request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
 		}
 	}
 
+	
 	// métodos:
 
 	private void irFormulario(HttpServletRequest request, HttpServletResponse response) { 
 		//este método sólo nos lleva al formulario, no es para rellenar los campos, para eso utilizamos "guardar"
-
-		// TODO pregutar por pID > 0 recuperar del DAO
-		// si no New Producto()
-
-		// dao.getById(id) => implementar
-
-		//////////////////////////////////////////
 
 		// recibimos parámetros:
 		int id = (request.getParameter("id") == null) ? 0 : Integer.parseInt(request.getParameter("id"));
@@ -165,63 +151,57 @@ public class ProductosController extends HttpServlet {
 	}
 
 	private void guardar(HttpServletRequest request, HttpServletResponse response) {
-		isRedirect = true;
+		// en función del id del producto:
+		// 1. se modificará si el id > 0, significa que el producto está en la lista
+		// 2. se creará un registro nuevo en caso contrario, puesto que si id = 0, significa que el producto todavía no está en la lista		
+		
 		
 		// recibir datos del formulario
 		int pId = Integer.parseInt(request.getParameter("id"));
 		float pPrecioFloat = Float.parseFloat(pPrecio);
 		int pDescuentoInt = Integer.parseInt(pDescuento);
-
-		// en función del id del producto:
-		// 1. se modificará si el id > 0, significa que el producto está en la lista
-		// 2. se creará un registro nuevo en caso contrario, puesto que si id = 0,
-		// significa que el producto todavía no está en la lista
-		if (pId > 0) {
-			LOG.trace("Modificar datos del producto");
+		
+		Producto producto = new Producto();
+		producto.setId(pId);
+		producto.setNombre(pNombre);
+		producto.setPrecio(pPrecioFloat);
+		producto.setImagen(pImagen);
+		producto.setDescripcion(pDescripcion);
+		producto.setDescuento(pDescuentoInt);
+		
+		
+		//nombre más de 2 y menos de 150
+		if (pNombre != null && pNombre.length() >= 2 && pNombre.length() <= 50) {
 			
-			Producto producto = new Producto();
-			
-			// modificamos los datos:
-			producto.setId(pId);
-			producto.setNombre(pNombre);
-			producto.setPrecio(pPrecioFloat);
-			producto.setImagen(pImagen);
-			producto.setDescripcion(pDescripcion);
-			producto.setDescuento(pDescuentoInt);
-
 			try {
-				dao.update(producto, pId);
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
-			} catch (Exception e) {
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Los datos del producto no se han podido modificar"));
-			}
-
-		} else {
-			LOG.trace("Crear un registro un producto nuevo");
-
-			// crear registro para un producto nuevo
-			Producto producto = new Producto();
-			producto.setNombre(pNombre);
-			producto.setPrecio(pPrecioFloat);
-			producto.setImagen(pImagen);
-			producto.setDescripcion(pDescripcion);
-			producto.setDescuento(pDescuentoInt);
-
-			// lo guardamos en la lista
-			try {
-				dao.create(producto);
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
-
-			} catch (Exception e) {
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede añadir"));
+				
+				if ( pId > 0 ) {  //modificar un producto existente
+					LOG.trace("Modificar datos del producto");
+					dao.update(producto, pId);		
+					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
+					
+				}else {  //crear nuevo producto
+					LOG.trace("Crear un registro un producto nuevo");
+					dao.create(producto);
+					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
+				}
+				
+			} catch (Exception e){
+				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));
 			}
 		}
-
+		else { // validación de campos del formulario incorrectos
+			
+			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El nombre debe ser entre 2 y 50 caratcteres"));
+						
+		}
+			
 		request.setAttribute("productos", dao.getAll()); // devuelve el dao con todos sus parámetros
-		// vistaSeleccionda = VIEW_TABLA;
-		vistaSeleccionda = VIEW_FORM;
+		
+		vistaSeleccionda = VIEW_FORM;			
 	}
 
+	
 	private void eliminar(HttpServletRequest request, HttpServletResponse response) {
 		// recibimos parámetros:
 		int pId = (request.getParameter("id") == null) ? 0 : Integer.parseInt(request.getParameter("id"));

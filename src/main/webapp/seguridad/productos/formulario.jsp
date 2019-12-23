@@ -11,6 +11,8 @@
 	
 	<!-- ------------------------------------------------------------------------------- -->
 	
+	
+	<!-- FORMULARIO -->
 	<form action="seguridad/productos" method="post">
 	<!-- <form action="seguridad/productos?accion=guardar" method="post"> -->
 	
@@ -98,11 +100,44 @@
 	               min="0" max="100"
 	               aria-describedby="descuentoHelp">
 		</div>
-
-	    <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>
+ 
+ 		<!--   <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>   -->
+	    <input type="submit" class="btn btn-block btn-outline-primary" value="${(producto.id>0)?"Modificar":"Crear" }">    <!-- para que el botón cambie de texto cuando queremos crear/modificar -->
 	</form>
 	
 
+
+
+
+	<!-- VENTANA MODAL BOOTSTRAP PARA ELIMINAR -->
+	<c:if test="${producto.id > 0}">
+
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal">Eliminar</button>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Eliminar producto</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        ¿Seguro que quieres comprar ${producto.nombre}?
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		        <a class="btn btn-danger" href="seguridad/productos?id=${producto.id}&accion=eliminar">Eliminar</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+	</c:if>
+	
 
 
 <%@include file="/includes/footer.jsp" %>    

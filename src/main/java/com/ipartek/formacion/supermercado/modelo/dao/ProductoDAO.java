@@ -18,7 +18,7 @@ public class ProductoDAO implements IDAO<Producto>{
 	//ctes para la consulta a la base de datos:
 	private static final String SQL_GET_ALL = "SELECT id, nombre FROM producto ORDER BY id DESC LIMIT 500;";
 	private static final String SQL_INSERT = "INSERT INTO producto (nombre) VALUES (?);";
-	private static final String SQL_GET_BY_ID = "SELECT p.id, p.nombre FROM producto as p WHERE p.id = ?;";
+	private static final String SQL_GET_BY_ID = "SELECT id, nombre FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE producto SET nombre= ? WHERE id = ?;";
 
@@ -28,7 +28,7 @@ public class ProductoDAO implements IDAO<Producto>{
 	}
 	
 	
-	//singleton --> https://es.wikipedia.org/wiki/Singleton --> sólo va a tener 1 único objeto en toda la clase, 1 objeto de tipo ArrayProductoDAO
+	//singleton --> https://es.wikipedia.org/wiki/Singleton --> sólo va a tener 1 único objeto en toda la clase, 1 objeto de tipo ArrayList<Producto>
 	public synchronized static ProductoDAO getInstance() {
 		if(INSTANCE == null) {
 			INSTANCE = new ProductoDAO();
@@ -66,12 +66,12 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	@Override
 	public Producto create(Producto pojo) throws Exception {
-		
+		//establecemos conexión:
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
-			pst.setString(1, pojo.getNombre());
+			pst.setString(1, pojo.getNombre()); //1er interrogante con el nombre del registro que se quiere modificar; en ese caso, Nombre
 			
 			int affectedRows = pst.executeUpdate();
-			if (affectedRows == 1) {
+			if (affectedRows == 1) { //queremos modificar un registro, así que afectará a 1 fila
 				// conseguimos el ID que acabamos de crear
 				ResultSet rs = pst.getGeneratedKeys();
 				if (rs.next()) {
@@ -89,66 +89,78 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	@Override
 	public Producto getById(int id) { 
-		Producto resul = new Producto();
 		
+		Producto registro = null;  
+		
+		//obtenemos la conexión:
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID)) {
 
+			//sustituimos parámetros en la SQL, en este caso 1º ? por id:
 			pst.setInt(1, id);
 
+			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) {
-				if (rs.next()) {
-					resul = mapper(rs);
+				while(rs.next()) {
+					registro = new Producto();
+					registro.setId(rs.getInt("id"));
+					registro.setNombre(rs.getString("nombre"));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return resul;
+		return registro; 
 	}
 	
 	
 	@Override
 	public Producto delete(int id) throws Exception {
-		Producto resul = new Producto();
+		Producto registro = null;
 		
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_DELETE);) {
 
 			pst.setInt(1, id);
+			
+			//obtenemos el id antes de elimianrlo:
+			registro = this.getById(id);
 
+			//eliminamos el prodcuto:
 			int affetedRows = pst.executeUpdate();
-			if (affetedRows == 1) {
-				resul = null; //¿?  
+			if (affetedRows != 1) {
+				registro = null; //eliminamos
+				throw new Exception("No se puede eliminar " + registro);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return resul;
+		return registro;
 	}
 	
 	
 	@Override
 	public Producto update(Producto pojo, int id) throws Exception {
-		Producto resul = new Producto();
-		
+				
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
 
 			pst.setString(1, pojo.getNombre());
-			pst.setInt(2, pojo.getId());
+			pst.setInt(2, id);
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
-				resul = null; //¿?  
+				pojo.setId(id);
+			} else {
+				throw new Exception ("No se encontró registro para id = " + id);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return resul;
+		 
+		return pojo;
 	}
 
 		
