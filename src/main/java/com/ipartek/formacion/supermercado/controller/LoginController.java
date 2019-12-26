@@ -10,6 +10,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.ipartek.formacion.supermercado.modelo.dao.UsuarioDAO;
+import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
+
 /**
  * Servlet implementation class LoginController
  */
@@ -19,8 +22,10 @@ public class LoginController extends HttpServlet {
 	
 	private static final Logger LOG = Logger.getLogger(LoginController.class);
 	
-	private static final String USUARIO = "admin";
-	private static final String PASSWORD = "admin";
+	//comentamos las líneas de usuario y password porque lo vamos a hacer con la base de datos y el usuarioDAO (admin, 123456):
+	//private static final String USUARIO = "admin";
+	//private static final String PASSWORD = "admin";
+	private static UsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
    
 
 	/**
@@ -42,10 +47,13 @@ public class LoginController extends HttpServlet {
 		String vista = "login.jsp";
 				
 		try {
+			
+			Usuario usuario = usuarioDAO.exist(nombre, password);
+			
 			//2. lógica de negocio:
-			if (USUARIO.equals(nombre) && PASSWORD.equals(password)) {
+			if (usuario != null) {
 				
-				//TODO POJO y DAO de USUARIO
+				LOG.info("login correcto " + usuario);
 				
 				//recuperar sesión del usuario == browser
 				HttpSession session = request.getSession();
@@ -67,13 +75,11 @@ public class LoginController extends HttpServlet {
 			}
 		}	
 		catch (Exception e){
-			//TODO traza de log
-			e.printStackTrace();
+			LOG.error(e);
 		}
 		finally{
 			//ir a JSP:
 			request.getRequestDispatcher(vista).forward(request, response);
-
 		}
 
 	}
