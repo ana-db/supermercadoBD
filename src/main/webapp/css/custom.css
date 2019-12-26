@@ -168,3 +168,12 @@ main{
 .imagen_producto_tabla {
 	width: 10em;
 }
+
+
+/* 7- custom 
+************************************/
+.fa-shopping-cart{ /* fontawesome */
+	color: white;
+	font-size: 1em;
+    text-decoration: none; /* quita la línea de subrayado del link */
+}
