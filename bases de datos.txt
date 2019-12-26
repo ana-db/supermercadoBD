@@ -1,0 +1,18 @@
+MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
+
+
+26/12:
+	- java 7 Autoclosable
+		- intro
+		- Antes de Java 7
+		- Uso del ARM
+
+	- Pool de conexiones
+		se encarga de gestionar todas las conexiones a la base de datos, en lugar de estar estableciendo la conexión y errándola cada vez que queramos acceder
+		- intro
+		- problemas
+		- pool de cxs
+		- config (en connectionManager): DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/mydb"); //jdbc/mydb --> devuelve un dataSource
+
+
+	- JDBC Presentación (power point)
