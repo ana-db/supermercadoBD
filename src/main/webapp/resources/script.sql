@@ -1,18 +1,20 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Versión del servidor:         5.1.72-community - MySQL Community Server (GPL)
+-- Versión del servidor:         8.0.18 - MySQL Community Server - GPL
 -- SO del servidor:              Win64
 -- HeidiSQL Versión:             10.3.0.5771
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
 -- Volcando estructura de base de datos para supermercado
 DROP DATABASE IF EXISTS `supermercado`;
-CREATE DATABASE IF NOT EXISTS `supermercado` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `supermercado` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `supermercado`;
 
 -- Volcando estructura para tabla supermercado.producto
@@ -25,9 +27,9 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `descripcion` varchar(150) NOT NULL,
   `descuento` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla supermercado.producto: ~41 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.producto: ~7 rows (aproximadamente)
 DELETE FROM `producto`;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
 INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `descuento`) VALUES
@@ -77,8 +79,9 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `contrasenia` varchar(50) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
--- Volcando datos para la tabla supermercado.usuario: ~2 rows (aproximadamente)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla supermercado.usuario: ~5 rows (aproximadamente)
 DELETE FROM `usuario`;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
 INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`) VALUES
@@ -92,6 +95,7 @@ INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
 
 
 
