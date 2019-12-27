@@ -16,3 +16,19 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 
 	- JDBC Presentación (power point)
+
+
+-------------------------------------------------------------------
+
+
+27/12:
+
+- ACID
+	- Atomicidad: o se hacen todos los pasos o ninguno (si se saca dinero del banco para ingresar en otra cuenta y no se lleva a cabo, no se quedan las 2 cuentas sin el dinero). Commit y rollback
+	- Consistencia: los datos no cambian
+	- Aislamiento: una operación no puede afectar a otras. Dos personas no pueden modificar a la vez el mismo registro de la bd (SGBD: sistemas gestión bases de datos)
+	- Durabilidad: la info no se pierde aunque se apague el ordenador
+
+
+- Motores de almacenamiento de MySQL y tipos de tablas
+	- INNODB y MyISAM son las más usadas
