@@ -10,13 +10,15 @@ import java.util.List;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
+import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 public class ProductoDAO implements IDAO<Producto>{
 
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
+	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento, p.id_usuario FROM producto as p as u WHERE p.id_usuario = u.id ORDER BY id DESC LIMIT 500;";
+	
 	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
 	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
@@ -52,10 +54,16 @@ public class ProductoDAO implements IDAO<Producto>{
 				Producto p = new Producto();
 				p.setId( rs.getInt("id"));
 				p.setNombre(rs.getString("nombre"));
-				p.setPrecio( rs.getFloat("precio"));
+				p.setPrecio(rs.getFloat("precio"));
 				p.setImagen(rs.getString("imagen"));
 				p.setDescripcion(rs.getString("descripcion"));
-				p.setDescuento( rs.getInt("descuento"));
+				p.setDescuento(rs.getInt("descuento"));
+				
+				Usuario u = new Usuario();
+				u.setNombre(rs.getString("nombre"));
+				u.setContrasenia(rs.getString("contrasenia"));
+				p.setUsuario(u);
+				
 				lista.add(p);
 
 			}

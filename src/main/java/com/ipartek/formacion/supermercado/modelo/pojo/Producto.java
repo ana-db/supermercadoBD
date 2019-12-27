@@ -28,6 +28,8 @@ public class Producto {
 	@Min(0)
 	@Max(100)
 	private int descuento;
+	
+	private Usuario usuario; //para relación entre tablas usuario-producto base de datos
 	 
 	
 	//constructores: 
@@ -39,6 +41,7 @@ public class Producto {
 		this.imagen = "https://image.flaticon.com/icons/png/512/372/372627.png";
 		this.descripcion = "";
 		this.descuento = DESCUENTO_MIN;
+		
 	}
 	
 	public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento) {
@@ -49,6 +52,7 @@ public class Producto {
 		this.imagen = imagen;
 		this.descripcion = descripcion;
 		this.descuento = descuento;
+		this.usuario = new Usuario();
 	}
 
 	
@@ -100,6 +104,14 @@ public class Producto {
 	public void setDescuento(int descuento) {
 		this.descuento = descuento;
 	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 	
 	//métodos propios:
@@ -108,13 +120,12 @@ public class Producto {
 		
 		return(this.precio - (this.precio * this.descuento / 100) );
 	}
-		
+
+	
 	@Override
 	public String toString() {
 		return "Producto [id=" + id + ", nombre=" + nombre + ", precio=" + precio + ", imagen=" + imagen
-				+ ", descripcion=" + descripcion + ", descuento=" + descuento + "]";
+				+ ", descripcion=" + descripcion + ", descuento=" + descuento + ", usuario=" + usuario + "]";
 	}
-	
-	
 	
 }

@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import com.ipartek.formacion.supermercado.controller.Alerta;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoDAO;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
+import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 /**
  * Servlet implementation class ProductosController
@@ -57,6 +58,7 @@ public class ProductosController extends HttpServlet {
 	String pImagen;
 	String pDescripcion;
 	String pDescuento;
+	Usuario pUsuario;
 	
 	
 	@Override
@@ -108,6 +110,7 @@ public class ProductosController extends HttpServlet {
 		pImagen = request.getParameter("imagen");
 		pDescripcion = request.getParameter("descripcion");
 		pDescuento = request.getParameter("descuento");
+		
 
 		
 		try {
