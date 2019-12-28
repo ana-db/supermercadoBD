@@ -8,8 +8,20 @@
 		maxWait="10000" 
 		name="jdbc/mydb"	 
 		type="javax.sql.DataSource"
-		url="jdbc:mysql://localhost:3306/supermercado?useSSL=false" 
+		url="jdbc:mysql://localhost:3306/supermercado" 
 		username="root"
-		password=""
+		password="root"
 		/>
 </Context>	
+
+<!-- Ipartek Heidi: 
+url="jdbc:mysql://localhost:3306/supermercado?useSSL=false" 
+username="root"
+password="" 
+-->
+
+<!-- Casa Heidi:
+url="jdbc:mysql://localhost:3306/supermercado" 
+username="root"
+password="root" 
+-->
