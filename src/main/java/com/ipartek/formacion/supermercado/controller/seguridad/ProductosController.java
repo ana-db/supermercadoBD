@@ -117,25 +117,25 @@ public class ProductosController extends HttpServlet {
 			// lógica de negocio
 
 			switch (pAccion) {
-			case ACCION_LISTAR:
-				listar(request, response);
-				break;
-
-			case ACCION_ELIMINAR:
-				eliminar(request, response);
-				break;
-
-			case ACCION_GUARDAR:
-				guardar(request, response);
-				break;
-
-			case ACCION_IR_FORMULARIO:
-				irFormulario(request, response);
-				break;
-
-			default:
-				listar(request, response);
-				break;
+				case ACCION_LISTAR:
+					listar(request, response);
+					break;
+	
+				case ACCION_ELIMINAR:
+					eliminar(request, response);
+					break;
+	
+				case ACCION_GUARDAR:
+					guardar(request, response);
+					break;
+	
+				case ACCION_IR_FORMULARIO:
+					irFormulario(request, response);
+					break;
+	
+				default:
+					listar(request, response);
+					break;
 			}
 
 			// request.setAttribute("productos", dao.getAll());

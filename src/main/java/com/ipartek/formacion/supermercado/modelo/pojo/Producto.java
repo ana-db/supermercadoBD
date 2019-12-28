@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 
 public class Producto {
 	
@@ -25,8 +26,7 @@ public class Producto {
 	@Size(min = 2, max = 150)
 	private String descripcion;
 	
-	@Min(0)
-	@Max(100)
+	@Range(min = 0, max= 100)
 	private int descuento;
 	
 	private Usuario usuario; //para relación entre tablas usuario-producto base de datos
@@ -41,10 +41,10 @@ public class Producto {
 		this.imagen = "https://image.flaticon.com/icons/png/512/372/372627.png";
 		this.descripcion = "";
 		this.descuento = DESCUENTO_MIN;
-		
+		this.usuario = new Usuario();
 	}
 	
-	public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento) {
+	public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento, Usuario usuario) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -52,7 +52,7 @@ public class Producto {
 		this.imagen = imagen;
 		this.descripcion = descripcion;
 		this.descuento = descuento;
-		this.usuario = new Usuario();
+		this.usuario = usuario;
 	}
 
 	

@@ -17,8 +17,8 @@ public class ProductoDAO implements IDAO<Producto>{
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento, p.id_usuario FROM producto as p as u WHERE p.id_usuario = u.id ORDER BY id DESC LIMIT 500;";
-	
+	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
+	//private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento, p.id_usuario FROM producto as p as u WHERE p.id_usuario = u.id ORDER BY id DESC LIMIT 500;";
 	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
 	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
@@ -59,10 +59,10 @@ public class ProductoDAO implements IDAO<Producto>{
 				p.setDescripcion(rs.getString("descripcion"));
 				p.setDescuento(rs.getInt("descuento"));
 				
-				Usuario u = new Usuario();
+				/*Usuario u = new Usuario();
 				u.setNombre(rs.getString("nombre"));
 				u.setContrasenia(rs.getString("contrasenia"));
-				p.setUsuario(u);
+				p.setUsuario(u); */
 				
 				lista.add(p);
 
