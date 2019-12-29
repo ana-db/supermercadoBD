@@ -37,7 +37,7 @@
 	            <th>Imagen</th>
 	            <th>Descripción</th>
 	            <th>Descuento</th>
-	            <!-- <th>Id Usuario</th> -->
+	            <th>Usuario</th>
 	            <th>Acción</th>
 	        </tr>
 	    </thead>
@@ -52,6 +52,7 @@
 					<td><img class="imagen_producto_tabla" src="${p.imagen}"></td>
 					<td>${p.descripcion}</td>
 					<td>${p.descuento}</td>
+					<td>${p.usuario.nombre}</td>
 					<td><a href="seguridad/productos?accion=formulario&id=${p.id}">Editar</a>, <a href="seguridad/productos?accion=eliminar&id=${p.id}">Comprar</a></td>
 				</tr>
 			</c:forEach>
@@ -66,7 +67,7 @@
 	              <th>Imagen</th>
 	              <th>Descripción</th>
 	              <th>Descuento</th>
-	              <!-- <th>Id Usuario</th> -->
+	              <th>Usuario</th>
 	              <th>Acción</th>
 	          </tr>
 		</tfoot>

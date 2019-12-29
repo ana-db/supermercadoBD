@@ -18,7 +18,7 @@ public class ProductoDAO implements IDAO<Producto>{
 
 	//ctes para la consulta a la base de datos:
 	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
-	//private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento, p.id_usuario FROM producto as p as u WHERE p.id_usuario = u.id ORDER BY id DESC LIMIT 500;";
+	//private static final String SQL_GET_ALL = "SELECT p.id, p.nombre, p.descripcion, p.imagen, p.precio, p.descuento, u.nombre FROM producto  AS p INNER JOIN usuario AS u ON p.id_usuario = u.id ORDER BY p.id DESC LIMIT 500;";
 	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
 	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
