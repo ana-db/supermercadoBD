@@ -32,3 +32,42 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 - Motores de almacenamiento de MySQL y tipos de tablas
 	- INNODB y MyISAM son las más usadas
+
+
+-------------------------------------------------------------------
+
+
+30/12:
+
+- JOINs combinar varias tablas
+	- normalmente usamos inner join
+	- RIGHT muestra aunque no tenga viviendas // LEFT es como la inner normal (posible test)
+	- Equi-join --> 
+		SELECT *
+ 		FROM   empleado
+        	INNER JOIN departamento ON empleado.IDDepartamento = departamento.IDDepartamento
+	- Natural join: no vamos a usar
+
+	- Combinación externa (OUTER JOIN)
+		- LEFT (dando la vuelta a las tablas una right se puede convertir en una left)
+		- LEFT JOIN excluyendo la intersección
+
+- Normalización de un Base de Datos (pdf)
+	- "...en el código PHP ...  preparado para comenzar a desarrollar tu aplicación en PHP (sustituir php por java)"
+	- BD relacional: tablas que se relacionan entre otras y se pueden sacar datos relacionados de varias
+	- quitar duplicados --> conseguimos consistencia
+	- Primer nivel de Formalización/Normalización. (F/N)
+		1. Eliminar los grupos repetitivos de la tablas individuales.
+		2. Crear una tabla separada por cada grupo de datos relacionados.
+		3. Identificar cada grupo de datos relacionados con una clave primaria. 
+	- Segundo nivel de F/N (tabla auxiliar)
+		1. Crear tablas separadas para aquellos grupos de datos que se aplican a varios registros.
+		2. Relacionar estas tablas mediante una clave externa. 
+	- Tercer nivel de F/N.
+		1. Eliminar aquellos campos que no dependan de la clave. --> toda info redundante la sacamos a otra tabla
+	- Cuarto Nivel de F/N.
+		1. En las relaciones varios-con-varios, entidades independientes no pueden ser almacenadas en la misma tabla. 
+		--> si la relación es N a N, sacamos una tabla nueva
+	- Quinto Nivel de F/N
+		1. La tabla original debe ser reconstruida desde las tablas resultantes en las cuales ha sido troceada. 
+
