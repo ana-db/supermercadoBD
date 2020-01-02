@@ -74,7 +74,7 @@
 						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 						    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
 								<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=listar">Tabla Productos</a>
-								<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=formulario">Formulario Productos</a> 
+								<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=formulario">Formulario Productos</a> 
 					       </c:if>
 						  </div>
 						</div>
@@ -85,7 +85,7 @@
 						  <button class="btn btn-secondary dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Usuario </button>
 						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 						    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
-						    	<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=listar">Tabla Usuarios</a>
+						    	<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=listar">Tabla Usuarios</a>
 								<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=formulario">Formulario Usuarios</a> 
 					       </c:if>
 						  </div>
@@ -106,7 +106,7 @@
 						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 						    <c:if test="${usuarioLogeado.rol.id eq 1 }" >
 								<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=listar">Mis Productos</a>
-								<a class="py-2 d-none d-md-inline-block" href="mipanel/formulario?accion=formulario">Formulario Crear Nuevo</a> 
+								<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=formulario">Formulario Crear Nuevo</a> 
 					       </c:if>
 						  </div>
 						</div>
