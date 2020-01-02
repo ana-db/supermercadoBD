@@ -17,8 +17,9 @@ public class ProductoDAO implements IDAO<Producto>{
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
-	//private static final String SQL_GET_ALL = "SELECT p.id, p.nombre, p.descripcion, p.imagen, p.precio, p.descuento, u.nombre FROM producto  AS p INNER JOIN usuario AS u ON p.id_usuario = u.id ORDER BY p.id DESC LIMIT 500;";
+	//private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
+	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' FROM producto p, usuario u WHERE p.id_usuario = u.id ORDER BY p.id DESC LIMIT 500;";
+	//usamos el alias 'id_producto' para p.id  para distinguirlo del campo id de la tabla usuario
 	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
 	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
@@ -52,17 +53,17 @@ public class ProductoDAO implements IDAO<Producto>{
 			while (rs.next()) {
 				
 				Producto p = new Producto();
-				p.setId( rs.getInt("id"));
-				p.setNombre(rs.getString("nombre"));
+				p.setId( rs.getInt("id_producto"));
+				p.setNombre(rs.getString("nombre_producto"));
 				p.setPrecio(rs.getFloat("precio"));
 				p.setImagen(rs.getString("imagen"));
 				p.setDescripcion(rs.getString("descripcion"));
 				p.setDescuento(rs.getInt("descuento"));
 				
-				/*Usuario u = new Usuario();
-				u.setNombre(rs.getString("nombre"));
-				u.setContrasenia(rs.getString("contrasenia"));
-				p.setUsuario(u); */
+				Usuario u = new Usuario();
+				u.setId(rs.getInt("id_usuario"));
+				u.setNombre(rs.getString("nombre_usuario"));
+				p.setUsuario(u);
 				
 				lista.add(p);
 
