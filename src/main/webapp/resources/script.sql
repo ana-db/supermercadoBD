@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `producto` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `FK_usuario` (`id_usuario`),
   CONSTRAINT `FK_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla supermercado.producto: ~40 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.producto: ~39 rows (aproximadamente)
 DELETE FROM `producto`;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
 INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES
@@ -80,31 +80,52 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `desc
 	(58, 'Uvas', 3.3, 'https://supermercado.eroski.es/images/17778762.jpg', 'Uva blanca sin semilla, cubeta 500 g', 15, 4);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 
+-- Volcando estructura para tabla supermercado.rol
+DROP TABLE IF EXISTS `rol`;
+CREATE TABLE IF NOT EXISTS `rol` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '1: Usuario normal  2: Administrador',
+  `nombre` varchar(15) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Volcando datos para la tabla supermercado.rol: ~0 rows (aproximadamente)
+DELETE FROM `rol`;
+/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` (`id`, `nombre`) VALUES
+	(2, 'administrador'),
+	(1, 'usuario');
+/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
+
 -- Volcando estructura para tabla supermercado.usuario
 DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL DEFAULT '0',
   `contrasenia` varchar(50) NOT NULL DEFAULT '0',
+  `id_rol` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `nombre` (`nombre`)
+  UNIQUE KEY `nombre` (`nombre`),
+  KEY `FK_rol` (`id_rol`),
+  CONSTRAINT `FK_rol` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla supermercado.usuario: ~6 rows (aproximadamente)
 DELETE FROM `usuario`;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`) VALUES
-	(1, 'admin', '123456'),
-	(2, 'Dolores', '56789'),
-	(4, 'Pepe', 'Pepe'),
-	(5, 'administrador', 'administrador'),
-	(8, 'nuevoUsuario', 'nuevoUsuario'),
-	(9, 'NuevoUsuario2', 'NuevoUsuario2');
+INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`, `id_rol`) VALUES
+	(1, 'admin', '123456', 2),
+	(2, 'Dolores', '56789', 1),
+	(4, 'Pepe', 'Pepe', 1),
+	(5, 'administrador', 'administrador', 2),
+	(8, 'nuevoUsuario', 'nuevoUsuario', 1),
+	(9, 'NuevoUsuario2', 'NuevoUsuario2', 1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
 
 
 
