@@ -105,30 +105,3 @@ INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-
-
-
-
-
-
--- --------------------------------------------------------
-
-
-
-/*   SQLs para CRUD de PRODUCTOS */
-
-
--- insertar nuevo producto; id autoincremental
-
-INSERT INTO producto ( nombre) VALUES ('donetes');
-
-
--- eliminar producto
-DELETE FROM producto WHERE id = 4 ;
-
--- modificar un producto
-UPDATE producto SET nombre = 'leche desnatada' WHERE id = 1;
-
-
--- obtener todos los productos
-SELECT id, nombre FROM producto ORDER BY id DESC LIMIT 500;
