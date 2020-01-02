@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
+import com.ipartek.formacion.supermercado.modelo.pojo.Rol;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 public class UsuarioDAO implements IUsuarioDAO {
@@ -21,10 +22,18 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 	private static UsuarioDAO INSTANCE;
 
-	private static final String SQL_EXIST = "SELECT id, nombre, contrasenia FROM usuario WHERE nombre = ? AND contrasenia = ?";
-	private static final String SQL_GET_ALL = "SELECT id, nombre, contrasenia FROM usuario ORDER BY id DESC LIMIT 500;";
+	//private static final String SQL_EXIST = "SELECT id, nombre, contrasenia FROM usuario WHERE nombre = ? AND contrasenia = ?";
+	private static final String SQL_EXIST = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
+											" FROM usuario u, rol r " + 
+											" WHERE u.id_rol = r.id AND " +
+											" u.nombre = ? AND contrasenia = ?;";
+	//private static final String SQL_GET_ALL = "SELECT id, nombre, contrasenia FROM usuario ORDER BY id DESC LIMIT 500;"; //añadir nuevas cols en mapper
+	private static final String SQL_GET_ALL = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
+											" FROM usuario u, rol r " + 
+											" WHERE u.id_rol = r.id;";
+	
 	private static final String SQL_INSERT = "INSERT INTO usuario (nombre, contrasenia) VALUES (?, ?);";
-	private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;";
+	private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;"; //añadir nuevas cols en mapper
 	private static final String SQL_DELETE = "DELETE FROM usuario WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE usuario SET nombre= ?, contrasenia = ? WHERE id = ?;";
 
@@ -54,6 +63,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
 				ResultSet rs = pst.executeQuery()) {
+			
+			LOG.debug(pst);
 
 			while (rs.next()) {
 				/*
@@ -69,7 +80,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 			}
 
 		} catch (SQLException e) {
-			LOG.error(e); //e.printStackTrace();
+			LOG.error(e); 
 		}
 
 		return lista;
@@ -87,6 +98,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 			//sustituimos parámetros en la SQL, en este caso 1º ? por id:
 			pst.setInt(1, id);
+			LOG.debug(pst);
 
 			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) {
@@ -183,7 +195,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 	
 	@Override
 	public Usuario exist(String nombre, String contrasenia) { // con este método comprobamos que el usuario exista en la base de datos
-		Usuario resul = null;
+		Usuario u = null;
 
 		LOG.debug("usuario = " + nombre + " contrasenia = " + contrasenia);
 
@@ -199,10 +211,13 @@ public class UsuarioDAO implements IUsuarioDAO {
 				if (rs.next()) { // lo ha encontrado
 					// mapear del RS al POJO:
 					// inicializamos el pojo y rellenamos sus datos:
+					/*
 					resul = new Usuario();
 					resul.setId(rs.getInt("id"));
 					resul.setNombre(rs.getString("nombre"));
 					resul.setContrasenia(rs.getString("contrasenia"));
+					*/
+					u = mapper(rs);
 				}
 
 			}
@@ -211,7 +226,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 			LOG.error(e);
 		}
 
-		return resul;
+		return u;
 	}
 	
 	
@@ -225,9 +240,15 @@ public class UsuarioDAO implements IUsuarioDAO {
 		
 		Usuario u = new Usuario();
 		
-		u.setId(rs.getInt("id"));
-		u.setNombre(rs.getString("nombre"));
+		u.setId(rs.getInt("id_usuario"));
+		u.setNombre(rs.getString("nombre_usuario"));
 		u.setContrasenia(rs.getString("contrasenia"));
+		
+		Rol r = new Rol();
+		r.setId(rs.getInt("id_rol"));
+		r.setNombre(rs.getString("nombre_rol"));
+		
+		u.setRol(r);
 		
 		return u;
 	}
