@@ -21,6 +21,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.controller.seguridad.ProductosController;
+import com.ipartek.formacion.supermercado.modelo.pojo.Rol;
+import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 
 
@@ -62,52 +64,18 @@ public class SeguridadFilter implements Filter {
 		
 		//hacemos el filtro de seguridad:
 		HttpSession session = req.getSession();
-		if (session.getAttribute("usuarioLogeado") == null) {
-			LOG.warn("Intentan entrar sin loggearse");
+		Usuario uLogeado = (Usuario) session.getAttribute("usuarioLogeado");
+		
+		if (uLogeado != null && uLogeado.getRol().getId() == Rol.ROL_ADMIN ) {
 			
-			//sacamos unas trazas con info:
-			LOG.debug("RequestURL: " + req.getRequestURL());
-			LOG.debug("RequestURL: " + req.getRequestURI());
-			LOG.debug("Protocolo HTTP: " + req.getProtocol());
-			LOG.debug("HTTP RemoteAddress, IP: " + req.getRemoteAddr());
-			LOG.debug("HTTP RemoteHost: " + req.getRemoteHost());
-			LOG.debug("Navegador: " + req.getHeader("User-Agent"));
-			
-			Map parametrosMap = req.getParameterMap(); //recogemos parámetros enviados
-			//visualizamos los parámetros enviados:
-			/*
-			for (Map key : parametrosMap.keySet()) {
-			    String[] strArr = (String[]) parametrosMap.get(key);
-			    for (String val : strArr) {
-			        System.out.println("Str Array= " + val);
-			    }
-			}	
-			*/		
-			
-			
-			/*
-			 * Vamos a calcular el números de usuarios que acceden indebidamente
-			 * Se inicializa la variable en este listener
-			 * @see com.ipartek.formacion.controller.listener.AppListener
-			 */
-			ServletContext sc = req.getServletContext(); //AplicationContext en la JSP
-			//actualizamos numeroAccesosIndebidos:
-			int numeroAccesosIndebidos = (int)sc.getAttribute("numeroAccesosIndebidos");
-			numeroAccesosIndebidos++;
-			sc.setAttribute("numeroAccesosIndebidos", numeroAccesosIndebidos);
-			
-			//guardamos ip en la colección:
-			HashSet<String> ips = (HashSet<String>)sc.getAttribute("ips");
-			String ipCliente = req.getRemoteHost();
-			ips.add(ipCliente);
-			sc.setAttribute("ips", ips);
+			chain.doFilter(request, response);
 			
 		}
 		else {
-			//dejamos pasar al filtro y continuar:
-			// pass the request along the filter chain
-			LOG.trace("logeado con exito");
-			chain.doFilter(request, response);
+			
+			LOG.warn("Acceso denegado por seguridad " + uLogeado);
+			session.invalidate();
+			res.sendRedirect( req.getContextPath() +  "/login.jsp");
 		}
 	}
 

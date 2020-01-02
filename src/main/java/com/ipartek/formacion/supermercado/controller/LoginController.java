@@ -58,7 +58,7 @@ public class LoginController extends HttpServlet {
 				
 				//recuperar sesión del usuario == browser
 				HttpSession session = request.getSession();
-				session.setAttribute("usuarioLogeado", nombre); //guarda 1 atributo  de la sesión
+				session.setAttribute("usuarioLogeado", usuario); //guarda 1 atributo  de la sesión
 				session.setMaxInactiveInterval(60*3); //3 mins
 				
 				if(usuario.getRol().getId() == Rol.ROL_ADMIN) {
