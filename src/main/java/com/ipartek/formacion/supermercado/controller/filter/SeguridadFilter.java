@@ -58,6 +58,7 @@ public class SeguridadFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		
 		//hacemos cast de request y response de tipo ServletRequest y ServletResponse a HttpServletRequest y HttpServletResponse:
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
@@ -68,6 +69,7 @@ public class SeguridadFilter implements Filter {
 		
 		if (uLogeado != null && uLogeado.getRol().getId() == Rol.ROL_ADMIN ) {
 			
+			// pass the request along the filter chain
 			chain.doFilter(request, response);
 			
 		}
@@ -78,5 +80,6 @@ public class SeguridadFilter implements Filter {
 			res.sendRedirect( req.getContextPath() +  "/login.jsp");
 		}
 	}
+
 
 }
