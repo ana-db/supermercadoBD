@@ -103,6 +103,7 @@
 		</div>
 
 	    
+	    <!--
 	   <div class="form-group">		
 			<label>Usuario del producto</label>
 			<select name="usuarioId" class="custom-select">

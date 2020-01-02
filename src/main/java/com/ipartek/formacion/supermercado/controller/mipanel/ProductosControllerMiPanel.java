@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -35,8 +36,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	private static final String VIEW_TABLA = "productos/index.jsp";
 	private static final String VIEW_FORM = "productos/formulario.jsp";
 	private static String vistaSeleccionda = VIEW_TABLA;
-	boolean isRedirect = false;
-	
+		
 	private static ProductoDAO daoProducto;
 	private static UsuarioDAO daoUsuario;
 	
@@ -197,8 +197,11 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		
 		//recogemos el id del usuario para el producto seleccionado:
 		Usuario u = new Usuario();
-		u.setId(Integer.parseInt(pUsuarioId));
-		producto.setUsuario(u);
+		//u.setId(Integer.parseInt(pUsuarioId)); 
+		//ahora no vamos a recibir el usuario por parámetro sino que lo cogemos de la sesión:
+		HttpSession sesion = request.getSession();
+		u = (Usuario) sesion.getAttribute("usuarioLogeado");
+		producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
 		
 		
 		//nombre más de 2 y menos de 150
@@ -270,14 +273,20 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			}
 		}
 
-		request.setAttribute("productos", daoProducto.getAllByIdUsuario()); // devuelve el dao con todos sus parámetros
-		vistaSeleccionda = VIEW_TABLA;
+		listar(request, response);
 
 	}
 
+	
 	private void listar(HttpServletRequest request, HttpServletResponse response) {
 		
-		request.setAttribute("productos", daoProducto.getAllByIdUsuario()); // devuelve el dao con todos sus parámetros
+		Usuario usuario = new Usuario();
+		
+		//cogemos el usuario de la sesión:
+		HttpSession session = request.getSession(); 
+		usuario = (Usuario) session.getAttribute("usuarioLogeado");
+		
+		request.setAttribute("productos", daoProducto.getAllByIdUsuario(usuario.getId())); // devuelve el dao con todos sus parámetros
 		vistaSeleccionda = VIEW_TABLA; // vamos a la tabla
 
 	}

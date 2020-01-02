@@ -8,11 +8,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 public class ProductoDAO implements IDAO<Producto>{
+	
+	private final static Logger LOG = Logger.getLogger(UsuarioDAO.class);
 
 	private static ProductoDAO INSTANCE;
 
@@ -23,17 +27,26 @@ public class ProductoDAO implements IDAO<Producto>{
 												" WHERE p.id_usuario = u.id " + 
 												" ORDER BY p.id DESC LIMIT 500;";
 	//usamos el alias 'id_producto' para p.id  para distinguirlo del campo id de la tabla usuario
+	
 	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
+	
 	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
 												" WHERE p.id_usuario = u.id AND p.id= ? " + 
 												" ORDER BY p.id DESC LIMIT 500;";
+	
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
+	
 	//private static final String SQL_UPDATE = "UPDATE producto SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
 
-	private static final String SQL_GET_ALL_BY_ID = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
+	//private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
+	private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+															" FROM producto p, usuario u " + 
+															" WHERE p.id_usuario = u.id AND id_usuario= ? " + 
+															" ORDER BY p.id DESC LIMIT 500;";
+	
 	
 	private ProductoDAO() {
 		super();
@@ -82,7 +95,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e); //e.printStackTrace();
 		}
 
 		return lista;
@@ -113,7 +126,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			}
 				
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e); //e.printStackTrace();
 		}
 		
 		return pojo;		
@@ -153,7 +166,7 @@ public class ProductoDAO implements IDAO<Producto>{
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e); //e.printStackTrace();
 		}
 		
 		return p; 
@@ -179,7 +192,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e); //e.printStackTrace();
 		}
 		
 		return registro;
@@ -214,16 +227,21 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	
 	
-	public List<Producto> getAllByIdUsuario() {
+	public List<Producto> getAllByIdUsuario(int usuarioId) {
 		
 		ArrayList<Producto> lista = new ArrayList<Producto>();
 
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_BY_ID);
-				ResultSet rs = pst.executeQuery()) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_BY_ID_USUARIO);
+				) {
+			
+			//sustituimos parámetros en la SQL, en este caso 1º ? por id:
+			pst.setInt(1, usuarioId);
+			
+			ResultSet rs = pst.executeQuery();
 
 			while (rs.next()) {
-				
+				/*
 				Producto p = new Producto();
 				
 				p.setId(rs.getInt("id_producto"));
@@ -232,13 +250,14 @@ public class ProductoDAO implements IDAO<Producto>{
 				p.setImagen(rs.getString("imagen"));
 				p.setDescripcion(rs.getString("descripcion"));
 				p.setDescuento(rs.getInt("descuento"));
+				*/
 				
-				lista.add(p);
+				lista.add(mapper(rs));
 
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error(e); //e.printStackTrace();
 		}
 
 		return lista;

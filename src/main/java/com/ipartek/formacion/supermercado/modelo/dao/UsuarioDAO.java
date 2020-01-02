@@ -27,13 +27,19 @@ public class UsuarioDAO implements IUsuarioDAO {
 											" FROM usuario u, rol r " + 
 											" WHERE u.id_rol = r.id AND " +
 											" u.nombre = ? AND contrasenia = ?;";
-	//private static final String SQL_GET_ALL = "SELECT id, nombre, contrasenia FROM usuario ORDER BY id DESC LIMIT 500;"; //añadir nuevas cols en mapper
+	
+	//private static final String SQL_GET_ALL = "SELECT id, nombre, contrasenia FROM usuario ORDER BY id DESC LIMIT 500;"; 
 	private static final String SQL_GET_ALL = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
 											" FROM usuario u, rol r " + 
 											" WHERE u.id_rol = r.id;";
 	
 	private static final String SQL_INSERT = "INSERT INTO usuario (nombre, contrasenia) VALUES (?, ?);";
-	private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;"; //añadir nuevas cols en mapper
+	
+	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;"; 
+	private static final String SQL_GET_BY_ID = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
+												" FROM usuario u, rol r AND id_usuario= ? " + 
+												" WHERE u.id_rol = r.id;";
+	
 	private static final String SQL_DELETE = "DELETE FROM usuario WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE usuario SET nombre= ?, contrasenia = ? WHERE id = ?;";
 
@@ -90,7 +96,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 	
 	@Override
 	public Usuario getById(int id) {
-		Usuario u = null;  
+		Usuario registro = null;  
 				
 		//obtenemos la conexión:
 		try (Connection con = ConnectionManager.getConnection();
@@ -109,14 +115,14 @@ public class UsuarioDAO implements IUsuarioDAO {
 					registro.setNombre(rs.getString("nombre"));
 					registro.setContrasenia(rs.getString("contrasenia"));
 					*/
-					u = mapper(rs);
+					registro = mapper(rs);
 				}
 			}
 		} catch (Exception e) {
 			LOG.error(e);
 		}
 		
-		return u; 
+		return registro; 
 	}
 
 	
@@ -151,8 +157,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
 
 			pst.setString(1, pojo.getNombre());
-			pst.setInt(2, id);
-			pst.setString(3, pojo.getContrasenia());
+			pst.setString(2, pojo.getContrasenia());
+			pst.setInt(3, id);
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
@@ -195,7 +201,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 	
 	@Override
 	public Usuario exist(String nombre, String contrasenia) { // con este método comprobamos que el usuario exista en la base de datos
-		Usuario u = null;
+		Usuario resul = null;
 
 		LOG.debug("usuario = " + nombre + " contrasenia = " + contrasenia);
 
@@ -217,7 +223,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 					resul.setNombre(rs.getString("nombre"));
 					resul.setContrasenia(rs.getString("contrasenia"));
 					*/
-					u = mapper(rs);
+					resul = mapper(rs);
 				}
 
 			}
@@ -226,7 +232,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 			LOG.error(e);
 		}
 
-		return u;
+		return resul;
 	}
 	
 	
