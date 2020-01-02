@@ -33,6 +33,7 @@ public class ProductoDAO implements IDAO<Producto>{
 	//private static final String SQL_UPDATE = "UPDATE producto SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
 
+	private static final String SQL_GET_ALL_BY_ID = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
 	
 	private ProductoDAO() {
 		super();
@@ -209,6 +210,38 @@ public class ProductoDAO implements IDAO<Producto>{
 		}
 		 
 		return pojo;
+	}
+	
+	
+	
+	public List<Producto> getAllByIdUsuario() {
+		
+		ArrayList<Producto> lista = new ArrayList<Producto>();
+
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_BY_ID);
+				ResultSet rs = pst.executeQuery()) {
+
+			while (rs.next()) {
+				
+				Producto p = new Producto();
+				
+				p.setId(rs.getInt("id_producto"));
+				p.setNombre(rs.getString("nombre_producto"));
+				p.setPrecio(rs.getFloat("precio"));
+				p.setImagen(rs.getString("imagen"));
+				p.setDescripcion(rs.getString("descripcion"));
+				p.setDescuento(rs.getInt("descuento"));
+				
+				lista.add(p);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return lista;
 	}
 	
 	

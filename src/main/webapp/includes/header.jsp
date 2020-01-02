@@ -96,7 +96,7 @@
 					<!-- USUARIO NORMAL -->
 					
 					<c:if test="${usuarioLogeado.rol.id eq 1 }" >
-						<a class="py-2 d-none d-md-inline-block text-white" href="seguridad/index.jsp">Mi panel</a>
+						<a class="py-2 d-none d-md-inline-block text-white" href="mipanel/index.jsp">Mi panel</a>
 			       </c:if>
 					
 	             
