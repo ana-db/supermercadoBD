@@ -102,6 +102,28 @@
 	               min="0" max="100"
 	               aria-describedby="descuentoHelp">
 		</div>
+		
+		
+		<!--  
+	    <div class="form-group">
+	        <label for="usuario">Usuario del producto</label>
+	        ${producto.usuario}
+	        
+	    	<hr>Todos los usuarios<hr>
+	        ${usuarios}
+	        <br>
+	    </div>
+	    -->
+	    
+	   <div class="form-group">		
+			<label>Usuario del producto</label>
+			<select name="usuarioId" class="custom-select">
+				<c:forEach items="${usuarios}" var="u">
+					<option value="${u.id}"  ${(u.id eq producto.usuario.id)?"selected":""} >${u.nombre}</option>	
+				</c:forEach>
+			</select>
+		</div>
+		
  
  		<!--   <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>   -->
 	    <input type="submit" class="btn btn-block btn-outline-primary" value="${(producto.id>0)?"Modificar":"Crear" }">    <!-- para que el botón cambie de texto cuando queremos crear/modificar -->

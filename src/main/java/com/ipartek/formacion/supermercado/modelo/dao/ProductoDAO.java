@@ -18,12 +18,20 @@ public class ProductoDAO implements IDAO<Producto>{
 
 	//ctes para la consulta a la base de datos:
 	//private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
-	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' FROM producto p, usuario u WHERE p.id_usuario = u.id ORDER BY p.id DESC LIMIT 500;";
+	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+												" FROM producto p, usuario u " + 
+												" WHERE p.id_usuario = u.id " + 
+												" ORDER BY p.id DESC LIMIT 500;";
 	//usamos el alias 'id_producto' para p.id  para distinguirlo del campo id de la tabla usuario
-	private static final String SQL_INSERT = "INSERT INTO producto (nombre, precio, imagen, descripcion, descuento) VALUES (?, ?, ?, ?, ?);";
-	private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
+	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
+	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
+	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+												" FROM producto p, usuario u " + 
+												" WHERE p.id_usuario = u.id AND p.id= ? " + 
+												" ORDER BY p.id DESC LIMIT 500;";
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
-	private static final String SQL_UPDATE = "UPDATE producto SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
+	//private static final String SQL_UPDATE = "UPDATE producto SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
+	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
 
 	
 	private ProductoDAO() {
@@ -51,7 +59,7 @@ public class ProductoDAO implements IDAO<Producto>{
 				ResultSet rs = pst.executeQuery()) {
 
 			while (rs.next()) {
-				
+				/*
 				Producto p = new Producto();
 				p.setId( rs.getInt("id_producto"));
 				p.setNombre(rs.getString("nombre_producto"));
@@ -66,6 +74,9 @@ public class ProductoDAO implements IDAO<Producto>{
 				p.setUsuario(u);
 				
 				lista.add(p);
+				*/
+				
+				lista.add(mapper(rs));
 
 			}
 
@@ -81,11 +92,14 @@ public class ProductoDAO implements IDAO<Producto>{
 	public Producto create(Producto pojo) throws Exception {
 		//establecemos conexión:
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
+			//"INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
+			
 			pst.setString(1, pojo.getNombre()); //1er interrogante con el nombre del registro que se quiere modificar; en ese caso, Nombre
 			pst.setFloat(2, pojo.getPrecio());
 			pst.setString(3, pojo.getImagen());
 			pst.setString(4, pojo.getDescripcion());
 			pst.setInt(5, pojo.getDescuento());
+			pst.setInt(6, pojo.getUsuario().getId() ); //añadimos usuario
 			
 			
 			int affectedRows = pst.executeUpdate();
@@ -108,7 +122,7 @@ public class ProductoDAO implements IDAO<Producto>{
 	@Override
 	public Producto getById(int id) { 
 		
-		Producto registro = null;  
+		Producto p = null;  
 		
 		//obtenemos la conexión:
 		try (Connection con = ConnectionManager.getConnection();
@@ -120,13 +134,20 @@ public class ProductoDAO implements IDAO<Producto>{
 			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) {
 				while(rs.next()) {
-					registro = new Producto();
-					registro.setId(rs.getInt("id"));
-					registro.setNombre(rs.getString("nombre"));
-					registro.setPrecio(rs.getFloat("precio"));
-					registro.setImagen(rs.getString("imagen"));
-					registro.setDescripcion(rs.getString("descripcion"));
-					registro.setDescuento( rs.getInt("descuento"));
+					/*
+					p.setId( rs.getInt("id_producto"));
+					p.setNombre(rs.getString("nombre_producto"));
+					p.setPrecio(rs.getFloat("precio"));
+					p.setImagen(rs.getString("imagen"));
+					p.setDescripcion(rs.getString("descripcion"));
+					p.setDescuento(rs.getInt("descuento"));
+					
+					Usuario u = new Usuario();
+					u.setId(rs.getInt("id_usuario"));
+					u.setNombre(rs.getString("nombre_usuario"));
+					p.setUsuario(u);
+					*/
+					p = mapper(rs);
 				
 				}
 			}
@@ -134,7 +155,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			e.printStackTrace();
 		}
 		
-		return registro; 
+		return p; 
 	}
 	
 	
@@ -166,15 +187,18 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	@Override
 	public Producto update(Producto pojo, int id) throws Exception {
-				
+						
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
 
-			pst.setInt(1, id);
-			pst.setString(2, pojo.getNombre());
-			pst.setFloat(3, pojo.getPrecio());
-			pst.setString(4, pojo.getImagen());
-			pst.setString(5, pojo.getDescripcion());
-			pst.setInt(6, pojo.getDescuento());
+			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+			pst.setString(1, pojo.getNombre());
+			pst.setFloat(2, pojo.getPrecio());
+			pst.setString(3, pojo.getImagen());
+			pst.setString(4, pojo.getDescripcion());
+			pst.setInt(5, pojo.getDescuento());
+			pst.setInt(6, pojo.getUsuario().getId());
+			pst.setInt(7, id);
+
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
@@ -182,12 +206,34 @@ public class ProductoDAO implements IDAO<Producto>{
 			} else {
 				throw new Exception ("No se encontró registro para id = " + id);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		 
 		return pojo;
+	}
+	
+	
+	/**
+	 * Utilidad para mapear un ResultSet a un pojo o a un Producto
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private Producto mapper(ResultSet rs) throws SQLException{
+		
+		Producto p = new Producto();
+		p.setId( rs.getInt("id_producto"));
+		p.setNombre(rs.getString("nombre_producto"));
+		p.setPrecio(rs.getFloat("precio"));
+		p.setImagen(rs.getString("imagen"));
+		p.setDescripcion(rs.getString("descripcion"));
+		p.setDescuento(rs.getInt("descuento"));
+		
+		Usuario u = new Usuario();
+		u.setId(rs.getInt("id_usuario"));
+		u.setNombre(rs.getString("nombre_usuario"));
+		p.setUsuario(u);
+		
+		return p;
 	}
 
 }

@@ -57,8 +57,7 @@
 	               aria-describedby="contraseniaHelp">
 	        <small id="contraseniaHelp" class="form-text text-muted">Contraseña del usuario</small>
 	    </div>	
-		
-		
+	    	
  
  		<!--   <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>   -->
 	    <input type="submit" class="btn btn-block btn-outline-primary" value="${(usuario.id>0)?"Modificar":"Crear" }">    <!-- para que el botón cambie de texto cuando queremos crear/modificar -->

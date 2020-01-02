@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
+import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 public class UsuarioDAO implements IUsuarioDAO {
@@ -55,12 +56,15 @@ public class UsuarioDAO implements IUsuarioDAO {
 				ResultSet rs = pst.executeQuery()) {
 
 			while (rs.next()) {
-				
+				/*
 				Usuario u = new Usuario();
 				u.setId( rs.getInt("id"));
 				u.setNombre(rs.getString("nombre"));
 				u.setContrasenia(rs.getString("contrasenia"));
 				lista.add(u);
+				*/
+				
+				lista.add(mapper(rs));
 
 			}
 
@@ -75,7 +79,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 	
 	@Override
 	public Usuario getById(int id) {
-		Usuario registro = null;  
+		Usuario u = null;  
 				
 		//obtenemos la conexión:
 		try (Connection con = ConnectionManager.getConnection();
@@ -87,17 +91,20 @@ public class UsuarioDAO implements IUsuarioDAO {
 			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) {
 				while(rs.next()) {
+					/*
 					registro = new Usuario();
 					registro.setId(rs.getInt("id"));
 					registro.setNombre(rs.getString("nombre"));
 					registro.setContrasenia(rs.getString("contrasenia"));
+					*/
+					u = mapper(rs);
 				}
 			}
 		} catch (Exception e) {
 			LOG.error(e);
 		}
 		
-		return registro; 
+		return u; 
 	}
 
 	
@@ -206,5 +213,24 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 		return resul;
 	}
+	
+	
+	/**
+	 * Utilidad para mapear un ResultSet a un pojo o a un Usuario
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	private Usuario mapper(ResultSet rs) throws SQLException{
+		
+		Usuario u = new Usuario();
+		
+		u.setId(rs.getInt("id"));
+		u.setNombre(rs.getString("nombre"));
+		u.setContrasenia(rs.getString("contrasenia"));
+		
+		return u;
+	}
+
 
 }

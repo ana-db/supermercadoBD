@@ -31,14 +31,14 @@ CREATE TABLE IF NOT EXISTS `producto` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `FK_usuario` (`id_usuario`),
   CONSTRAINT `FK_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla supermercado.producto: ~37 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.producto: ~39 rows (aproximadamente)
 DELETE FROM `producto`;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
 INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES
-	(1, 'Leche semidesnatada', 0.8, 'https://supermercado.eroski.es/images/212878.jpg', 'Leche semidesnatada KAIKU, brik 1 litro', 0, 1),
-	(2, 'Cafe', 2.5, 'https://supermercado.eroski.es/images/350595.jpg', 'Café molido natural FORTALEZA, paquete 250 g', 10, 1),
+	(1, 'Leche semidesnatada', 0.8, 'https://supermercado.eroski.es/images/212878.jpg', 'Leche semidesnatada KAIKU, brik 1 litro', 0, 2),
+	(2, 'Cafe', 2.5, 'https://supermercado.eroski.es/images/350595.jpg', 'Cafe molido natural FORTALEZA, paquete 250 g', 10, 4),
 	(4, 'Turrón blando', 2.3, 'https://supermercado.eroski.es/images/17929787.jpg', 'Turrón blando EROSKI, caja 250 g', 20, 1),
 	(5, 'Gulas', 5, 'https://supermercado.eroski.es/images/19780345.jpg', 'Gulas del norte congeladas LA GULA DEL NORTE, bandeja 200 g', 10, 1),
 	(8, 'Leche', 0.7, 'https://supermercado.eroski.es/images/18672311.jpg', 'Leche semidesnatada del PaÍs Vasco EROSKI, brik 1 litro', 0, 1),
@@ -75,7 +75,8 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `desc
 	(48, 'Pan', 0.8, 'https://supermercado.eroski.es/images/1106434.jpg', 'Barra grande, 330 g', 0, 1),
 	(51, 'Nueces', 5.2, 'https://supermercado.eroski.es/images/17520610.jpg', 'Nuez del País Vasco, al peso, compra mínima 500 g', 30, 2),
 	(54, 'Empanadillas', 0.8, 'https://supermercado.eroski.es/images/227272.jpg', 'Empanadillas de atún EROSKI basic, bandeja 250 g', 10, 2),
-	(55, 'Croissant ', 2.4, 'https://supermercado.eroski.es/images/13198098.jpg', 'Croissant curvo, 4+1 uds. GRATIS, bandeja 330 g', 15, 2);
+	(55, 'Croissant ', 2.4, 'https://supermercado.eroski.es/images/13198098.jpg', 'Croissant curvo, 4+1 uds. GRATIS, bandeja 330 g', 15, 2),
+	(57, 'Colacao', 7, 'https://supermercado.eroski.es/images/8473902.jpg', 'Cacao soluble COLA CAO, ecobolsa 1,2 kg', 15, 4);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.usuario
@@ -103,6 +104,7 @@ INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`) VALUES
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
 
 
 
