@@ -272,6 +272,22 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		}
 
 		listar(request, response);
+		
+		/*
+		//////////////// CORRIGIENDO AGUJERO DE SEGURIDAD
+		if (producto.getUsuario().getId() == uLogeado.getId()) {
+			//dejamos que lo elimine
+		}else { //se le invalida la sesión y se le envia al login
+			request.getSession().invalidate();;
+			try {
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
+			} catch (ServletException e) {
+				LOG.warn("Ha saltado una excepción en el controlador");
+			} catch (IOException e) {
+				LOG.warn("Ha saltado una excepción IO");
+			}
+		}
+		*///////////////
 
 	}
 
