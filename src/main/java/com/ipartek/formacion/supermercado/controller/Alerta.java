@@ -2,9 +2,12 @@ package com.ipartek.formacion.supermercado.controller;
 
 public class Alerta {
 	
-	//TODO resto de tipos: success, warning...
+	//distintos tipos de alerts: primary, danger, success, warning...
 	public static final String TIPO_PRIMARY = "primary";
 	public static final String TIPO_DANGER = "danger";
+	public static final String TIPO_SUCCESS = "success";
+	public static final String TIPO_WARNING = "warning";
+	public static final String TIPO_INFO = "info";
 	
 	private String texto;
 	private String tipo;
