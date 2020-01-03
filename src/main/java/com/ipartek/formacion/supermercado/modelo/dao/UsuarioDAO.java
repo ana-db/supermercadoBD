@@ -32,7 +32,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 											" FROM usuario u, rol r " + 
 											" WHERE u.id_rol = r.id;";
 	
-	private static final String SQL_INSERT = "INSERT INTO usuario (nombre, contrasenia) VALUES (?, ?);";
+	private static final String SQL_INSERT = "INSERT INTO `usuario` (`nombre`, `contrasenia`, `id_rol`) VALUES (?, ?, ?);";
 	
 	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;"; 
 	private static final String SQL_GET_BY_ID = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
@@ -40,8 +40,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 												" WHERE u.id_rol = r.id;";
 	
 	private static final String SQL_DELETE = "DELETE FROM usuario WHERE id = ?;";
-	private static final String SQL_UPDATE = "UPDATE `usuario` SET `nombre`=?, `contrasenia`=? WHERE  `id`=?;";
-	
+	private static final String SQL_UPDATE = "UPDATE `usuario` SET `nombre`=?, `contrasenia`=?, `id_rol`=? WHERE  `id`=?;";
+		
 	
 	// constructor:
 	public UsuarioDAO() {
@@ -158,7 +158,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 			pst.setString(1, pojo.getNombre());
 			pst.setString(2, pojo.getContrasenia());
-			pst.setInt(3, id);
+			pst.setInt(3, pojo.getRol().getId() ); //recogemos id rol
+			pst.setInt(4, id);
 			LOG.debug(pst);
 
 			int affetedRows = pst.executeUpdate();
@@ -183,6 +184,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 			
 			pst.setString(1, pojo.getNombre()); //1er interrogante con el nombre del registro que se quiere modificar; en ese caso, Nombre
 			pst.setString(2, pojo.getContrasenia());
+			pst.setInt(3, pojo.getRol().getId() ); //añadimos id rol
 			LOG.debug(pst);
 			
 			int affectedRows = pst.executeUpdate();

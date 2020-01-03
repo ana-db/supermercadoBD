@@ -34,6 +34,7 @@ public class UsuariosController extends HttpServlet {
 	private static String vistaSeleccionda = VIEW_TABLA_USUARIOS;
 	
 	private static UsuarioDAO dao;
+
 	
 	// acciones
 	public static final String ACCION_LISTAR = "listar";
@@ -97,7 +98,6 @@ public class UsuariosController extends HttpServlet {
 		uNombre = request.getParameter("nombre");
 		uContrasenia = request.getParameter("contrasenia");
 		
-		
 		try {
 			// lógica de negocio
 
@@ -127,7 +127,7 @@ public class UsuariosController extends HttpServlet {
 
 		} catch (Exception e) {
 			LOG.warn("Ha habido algún problema");
-			e.printStackTrace();
+			
 		} finally {
 			// ir a JSP:
 			request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
@@ -151,7 +151,7 @@ public class UsuariosController extends HttpServlet {
 			usuarioVisualizar = dao.getById(id); // getById() en IDAO
 
 		}
-	
+
 		request.setAttribute("usuario", usuarioVisualizar);
 		vistaSeleccionda = VIEW_FORM_USUARIOS;
 		
@@ -239,7 +239,7 @@ public class UsuariosController extends HttpServlet {
 			}
 		}
 
-		request.setAttribute("productos", dao.getAll()); // devuelve el dao con todos sus parámetros
+		request.setAttribute("usuarios", dao.getAll()); // devuelve el dao con todos sus parámetros
 		vistaSeleccionda = VIEW_TABLA_USUARIOS;
 		
 	}

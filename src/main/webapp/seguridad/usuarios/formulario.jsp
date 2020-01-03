@@ -5,6 +5,7 @@
  
 	<h1>Formulario Usuarios</h1>
 	
+	${usuario}
 	
 	<!-- FORMULARIO -->
 	<form action="seguridad/usuarios" method="post">
