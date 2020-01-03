@@ -143,7 +143,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-		        <a class="btn btn-danger" href="seguridad/productos?id=${producto.id}&accion=eliminar">Eliminar</a>
+		        <a class="btn btn-danger" href="mipanel/productos?id=${producto.id}&accion=eliminar">Eliminar</a>
 		      </div>
 		    </div>
 		  </div>
