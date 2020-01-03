@@ -43,7 +43,7 @@
 	
   <body id="top">
   
-  	${usuarioLogeado}
+  	<!-- ${usuarioLogeado} -->
   
   	<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
 	    <div class="container"> <!-- lo metemos dentro de un container para que se centre el contenido -->
