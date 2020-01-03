@@ -38,6 +38,7 @@
 	            <th>ID</th>
 	            <th>Nombre</th>
 	            <th>Contraseña</th>
+	            <th>Rol</th>
 	            <th>Acción</th>
 	        </tr>
 	    </thead>
@@ -49,6 +50,7 @@
 					<td>${u.id}</td>
 					<td>${u.nombre}</td>
 					<td>${u.contrasenia}</td>
+					<td>${u.rol.nombre}</td>
 					<td><a href="seguridad/usuarios?accion=formulario&id=${u.id}">Editar</a>, <a href="seguridad/usuarios?accion=eliminar&id=${u.id}">Borrar</a></td>
 				</tr>
 			</c:forEach>
@@ -60,6 +62,7 @@
 	              <th>ID</th>
 	              <th>Nombre</th>
 	              <th>Contraseña</th>
+	              <th>Rol</th>
 	              <th>Acción</th>
 	          </tr>
 		</tfoot>
