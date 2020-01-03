@@ -278,6 +278,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		if (producto.getUsuario().getId() == uLogeado.getId()) {
 			//dejamos que lo elimine
 		}else { //se le invalida la sesión y se le envia al login
+			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "ese objeto no es tuyo"));
 			request.getSession().invalidate();;
 			try {
 				request.getRequestDispatcher("/login.jsp").forward(request, response);
