@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1 id="top">Mi Tabla de Productos</h1>
+	<h1 class="text-info" id="top">Mis productos</h1>
 	
 	
 	<a href="mipanel/productos?accion=formulario">Crear Nuevo Producto</a>

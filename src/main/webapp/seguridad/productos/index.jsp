@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1 id="top">Tabla</h1>
+	<h1 class="text-info" id="top">Productos</h1>
 	
 	
 	<a href="seguridad/productos?accion=formulario">Nuevo Producto</a>

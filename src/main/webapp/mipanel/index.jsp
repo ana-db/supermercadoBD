@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1>Mi panel</h1>
+	<h1 class="text-info" >Mi panel</h1>
 	
 	
 

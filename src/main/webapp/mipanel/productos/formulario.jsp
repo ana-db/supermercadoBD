@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1>Mi Formulario</h1>
+	<h1 class="text-info" >Mi Formulario de productos</h1>
 	
 	
 	<!-- ${producto}  -->	
