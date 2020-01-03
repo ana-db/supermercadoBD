@@ -27,7 +27,7 @@ import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 public class UsuariosController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger LOG = Logger.getLogger(ProductosController.class);
+	private static final Logger LOG = Logger.getLogger(UsuariosController.class);
 
 	private static final String VIEW_TABLA_USUARIOS = "usuarios/index.jsp";
 	private static final String VIEW_FORM_USUARIOS = "usuarios/formulario.jsp";
@@ -246,6 +246,7 @@ public class UsuariosController extends HttpServlet {
 	
 
 	private void listar(HttpServletRequest request, HttpServletResponse response) {
+		
 		request.setAttribute("usuarios", dao.getAll()); // devuelve el dao con todos sus parámetros
 		vistaSeleccionda = VIEW_TABLA_USUARIOS; // vamos a la tabla
 		
