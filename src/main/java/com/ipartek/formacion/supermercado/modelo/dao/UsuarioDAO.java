@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
-import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Rol;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
@@ -41,8 +40,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 												" WHERE u.id_rol = r.id;";
 	
 	private static final String SQL_DELETE = "DELETE FROM usuario WHERE id = ?;";
-	private static final String SQL_UPDATE = "UPDATE usuario SET nombre= ?, contrasenia = ? WHERE id = ?;";
-
+	private static final String SQL_UPDATE = "UPDATE `usuario` SET `nombre`=?, `contrasenia`=? WHERE  `id`=?;";
+	
 	
 	// constructor:
 	public UsuarioDAO() {
@@ -67,23 +66,23 @@ public class UsuarioDAO implements IUsuarioDAO {
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
-				ResultSet rs = pst.executeQuery()) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);) {
 			
 			LOG.debug(pst);
-
-			while (rs.next()) {
-				/*
-				Usuario u = new Usuario();
-				u.setId( rs.getInt("id"));
-				u.setNombre(rs.getString("nombre"));
-				u.setContrasenia(rs.getString("contrasenia"));
-				lista.add(u);
-				*/
-				
-				lista.add(mapper(rs));
-
-			}
+			
+			try (ResultSet rs = pst.executeQuery()){
+				while (rs.next()) {
+					/*
+					Usuario u = new Usuario();
+					u.setId( rs.getInt("id"));
+					u.setNombre(rs.getString("nombre"));
+					u.setContrasenia(rs.getString("contrasenia"));
+					lista.add(u);
+					*/
+					
+					lista.add(mapper(rs));
+				}
+			} //executeQuery
 
 		} catch (SQLException e) {
 			LOG.error(e); 
@@ -133,6 +132,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_DELETE);) {
 
 			pst.setInt(1, id);
+			LOG.debug(pst);
 			
 			//obtenemos el id antes de elimianrlo:
 			registro = this.getById(id);
@@ -159,6 +159,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 			pst.setString(1, pojo.getNombre());
 			pst.setString(2, pojo.getContrasenia());
 			pst.setInt(3, id);
+			LOG.debug(pst);
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
@@ -179,8 +180,10 @@ public class UsuarioDAO implements IUsuarioDAO {
 	public Usuario create(Usuario pojo) throws Exception {
 		//establecemos conexión:
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
+			
 			pst.setString(1, pojo.getNombre()); //1er interrogante con el nombre del registro que se quiere modificar; en ese caso, Nombre
 			pst.setString(2, pojo.getContrasenia());
+			LOG.debug(pst);
 			
 			int affectedRows = pst.executeUpdate();
 			if (affectedRows == 1) { //queremos modificar un registro, así que afectará a 1 fila
