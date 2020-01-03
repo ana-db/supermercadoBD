@@ -16,12 +16,11 @@ import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 public class ProductoDAO implements IDAO<Producto>{
 	
-	private final static Logger LOG = Logger.getLogger(UsuarioDAO.class);
+	private final static Logger LOG = Logger.getLogger(ProductoDAO.class);
 
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	//private static final String SQL_GET_ALL = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto ORDER BY id DESC LIMIT 500;";
 	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
 												" WHERE p.id_usuario = u.id " + 
@@ -30,7 +29,6 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
 	
-	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, precio, imagen, descripcion, descuento FROM producto WHERE id = ?;";
 	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
 												" WHERE p.id_usuario = u.id AND p.id= ? " + 
@@ -38,7 +36,6 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
 	
-	//private static final String SQL_UPDATE = "UPDATE producto SET nombre = ?, precio = ?, imagen = ?, descripcion = ?, descuento = ? WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
 
 	//private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
@@ -114,6 +111,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			pst.setString(4, pojo.getDescripcion());
 			pst.setInt(5, pojo.getDescuento());
 			pst.setInt(6, pojo.getUsuario().getId() ); //añadimos usuario
+			LOG.debug(pst);
 			
 			
 			int affectedRows = pst.executeUpdate();
@@ -144,6 +142,7 @@ public class ProductoDAO implements IDAO<Producto>{
 
 			//sustituimos parámetros en la SQL, en este caso 1º ? por id:
 			pst.setInt(1, id);
+			LOG.debug(pst);
 
 			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) {
@@ -180,6 +179,7 @@ public class ProductoDAO implements IDAO<Producto>{
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_DELETE);) {
 
 			pst.setInt(1, id);
+			LOG.debug(pst);
 			
 			//obtenemos el id antes de elimianrlo:
 			registro = this.getById(id);
@@ -212,7 +212,7 @@ public class ProductoDAO implements IDAO<Producto>{
 			pst.setInt(5, pojo.getDescuento());
 			pst.setInt(6, pojo.getUsuario().getId());
 			pst.setInt(7, id);
-
+			LOG.debug(pst);
 
 			int affetedRows = pst.executeUpdate();
 			if (affetedRows == 1) {
@@ -227,7 +227,7 @@ public class ProductoDAO implements IDAO<Producto>{
 	
 	
 	
-	public List<Producto> getAllByIdUsuario(int usuarioId) {
+	public List<Producto> getAllByIdUsuario(int idUsuario) {
 		
 		ArrayList<Producto> lista = new ArrayList<Producto>();
 
@@ -236,7 +236,8 @@ public class ProductoDAO implements IDAO<Producto>{
 				) {
 			
 			//sustituimos parámetros en la SQL, en este caso 1º ? por id:
-			pst.setInt(1, usuarioId);
+			pst.setInt(1, idUsuario);
+			LOG.debug(pst);
 			
 			ResultSet rs = pst.executeQuery();
 
