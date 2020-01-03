@@ -1,6 +1,8 @@
 package com.ipartek.formacion.supermercado.controller.filter;
 
 import java.io.IOException;
+
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -20,7 +22,13 @@ import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 /**
  * Servlet Filter implementation class SeguridadMiPanel
  */
-@WebFilter("/SeguridadMiPanel/*")
+@WebFilter(dispatcherTypes = {
+		DispatcherType.REQUEST, 
+		DispatcherType.FORWARD, 
+		DispatcherType.INCLUDE, 
+		DispatcherType.ERROR
+}
+			, urlPatterns = { "/mipanel/*" })
 public class SeguridadMiPanel implements Filter {
 
 	private final static Logger LOG = Logger.getLogger(SeguridadMiPanel.class);
@@ -53,7 +61,7 @@ public class SeguridadMiPanel implements Filter {
 		HttpSession session = req.getSession();
 		Usuario uLogeado = (Usuario) session.getAttribute("usuarioLogeado");
 		
-		if (uLogeado != null && uLogeado.getRol().getId() == Rol.ROL_USUARIO ) {
+		if (uLogeado != null && uLogeado.getRol().getId() == Rol.ROL_USUARIO ) { //sólo se deja pasar al usuario que tenga el ROL de usuario normal (no admin)
 			
 			// pass the request along the filter chain
 			chain.doFilter(request, response);
