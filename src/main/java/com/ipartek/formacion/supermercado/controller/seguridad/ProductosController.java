@@ -1,7 +1,6 @@
 package com.ipartek.formacion.supermercado.controller.seguridad;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
@@ -35,7 +34,6 @@ public class ProductosController extends HttpServlet {
 	private static final String VIEW_TABLA = "productos/index.jsp";
 	private static final String VIEW_FORM = "productos/formulario.jsp";
 	private static String vistaSeleccionda = VIEW_TABLA;
-	boolean isRedirect = false;
 	
 	private static ProductoDAO daoProducto;
 	private static UsuarioDAO daoUsuario;
