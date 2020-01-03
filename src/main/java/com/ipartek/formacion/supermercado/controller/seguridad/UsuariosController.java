@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.controller.Alerta;
 import com.ipartek.formacion.supermercado.modelo.dao.UsuarioDAO;
+import com.ipartek.formacion.supermercado.modelo.pojo.Rol;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
 /**
@@ -98,6 +99,8 @@ public class UsuariosController extends HttpServlet {
 		uNombre = request.getParameter("nombre");
 		uContrasenia = request.getParameter("contrasenia");
 		
+		//String uRolId = request.getParameter("contrasenia"); 
+		
 		try {
 			// lógica de negocio
 
@@ -170,6 +173,12 @@ public class UsuariosController extends HttpServlet {
 		usuario.setId(uId);
 		usuario.setNombre(uNombre);
 		usuario.setContrasenia(uContrasenia);
+		
+		/*recogemos el id del usuario para el producto seleccionado:
+		int uRolId = Integer.parseInt(request.getParameter("id"));
+		Rol r = new Rol();
+		r.setId(uRolId);
+		usuario.setRol(r); */
 		
 		//nombre entre 2 y 50 caracteres
 		Set<ConstraintViolation<Usuario>> validaciones = validator.validate(usuario); //if (uNombre != null && uNombre.length() >= 2 && uNombre.length() <= 50)

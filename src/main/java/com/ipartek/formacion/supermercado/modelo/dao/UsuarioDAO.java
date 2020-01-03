@@ -36,8 +36,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 	
 	//private static final String SQL_GET_BY_ID = "SELECT id, nombre, contrasenia FROM usuario WHERE id = ?;"; 
 	private static final String SQL_GET_BY_ID = "SELECT u.id 'id_usuario', u.nombre 'nombre_usuario', contrasenia, r.id 'id_rol', r.nombre 'nombre_rol' " +
-												" FROM usuario u, rol r AND id_usuario= ? " + 
-												" WHERE u.id_rol = r.id;";
+												" FROM usuario u, rol r " + 
+												" WHERE u.id_rol = r.id AND u.id= ?;";
 	
 	private static final String SQL_DELETE = "DELETE FROM usuario WHERE id = ?;";
 	private static final String SQL_UPDATE = "UPDATE `usuario` SET `nombre`=?, `contrasenia`=?, `id_rol`=? WHERE  `id`=?;";
