@@ -40,7 +40,9 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	private static ProductoDAO daoProducto;
 	private static UsuarioDAO daoUsuario;
 	
-
+	private Usuario uLogeado;
+	
+	
 	// acciones
 	public static final String ACCION_LISTAR = "listar";
 	public static final String ACCION_IR_FORMULARIO = "formulario";
@@ -61,8 +63,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	String pImagen;
 	String pDescripcion;
 	String pDescuento;
-		
-	String pUsuarioId;
 	
 	
 	@Override
@@ -117,7 +117,9 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		pDescripcion = request.getParameter("descripcion");
 		pDescuento = request.getParameter("descuento");
 		
-		pUsuarioId = request.getParameter("usuarioId");
+		//ahora no vamos a recibir el usuario por parámetro sino que lo cogemos de la sesión para evitar que se envíe el usuario desde el formulario:
+		HttpSession sesion = request.getSession();
+		uLogeado = (Usuario) sesion.getAttribute("usuarioLogeado"); //en 1 línea: uLogeado = (Usuario)request.getSession().getAttribute("usuarioLogeado");
 		
 		
 		try {
@@ -147,7 +149,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 
 		} catch (Exception e) {
 			LOG.warn("Ha habido algún problema");
-			e.printStackTrace();
 		} finally {
 			// ir a JSP:
 			request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
@@ -195,12 +196,9 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		producto.setDescripcion(pDescripcion);
 		producto.setDescuento(pDescuentoInt);
 		
-		//recogemos el id del usuario para el producto seleccionado:
+		//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
 		Usuario u = new Usuario();
-		//u.setId(Integer.parseInt(pUsuarioId)); 
-		//ahora no vamos a recibir el usuario por parámetro sino que lo cogemos de la sesión:
-		HttpSession sesion = request.getSession();
-		u = (Usuario) sesion.getAttribute("usuarioLogeado");
+		u.setId(uLogeado.getId()); //u.setId(Integer.parseInt(pUsuarioId)); 
 		producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
 		
 		
@@ -280,13 +278,9 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	
 	private void listar(HttpServletRequest request, HttpServletResponse response) {
 		
-		Usuario usuario = new Usuario();
+		ArrayList<Producto> productos = (ArrayList<Producto>) daoProducto.getAllByIdUsuario(uLogeado.getId());
+		request.setAttribute("productos", productos );
 		
-		//cogemos el usuario de la sesión:
-		HttpSession session = request.getSession(); 
-		usuario = (Usuario) session.getAttribute("usuarioLogeado");
-		
-		request.setAttribute("productos", daoProducto.getAllByIdUsuario(usuario.getId())); // devuelve el dao con todos sus parámetros
 		vistaSeleccionda = VIEW_TABLA; // vamos a la tabla
 
 	}
