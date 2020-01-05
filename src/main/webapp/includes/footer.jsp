@@ -17,7 +17,7 @@
             
             <div class="float-right"><!-- <div class="d-flex justify-content-end"> -->
                 <!-- siempre que hagamos que algo flote, el contenedor tiene que tener una clase CLEARFIX -->
-                Java, HTML, CSS, Bases de Datos &copy; 
+                Java, HTML, CSS, Bootstrap, Bases de Datos &copy; 
                 <a class="fab fa-github" href="https://github.com/ana-db/supermercadoBD.git" target=_blank></a> Ana Díez Bravo 2020  
                 <a class="fas fa-shopping-cart"></a>
             </div>  
