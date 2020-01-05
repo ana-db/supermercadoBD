@@ -55,6 +55,8 @@
 	        
 	        <div class="collapse navbar-collapse" id="navbarDropdown">
 	            <ul class="navbar-nav mr-auto">
+					
+					<!-- LOGIN -->
 					<c:if test="${empty usuarioLogeado}" >
 	            		<li class="nav-item">
 							<a class="nav-link" href="login.jsp">Login<span class="sr-only">(current)</span></a>
@@ -63,58 +65,56 @@
 					
 					
 					<!-- USUARIO ADMINISTRADOR -->
-					
 					<c:if test="${usuarioLogeado.rol.id eq 2 }" >
 						<a class="py-2 d-none d-md-inline-block text-white" href="seguridad/index.jsp">Dashboard</a>
-			       </c:if>
+						
+						<li class="nav-item">
+							<div class="dropdown">
+							  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Producto </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
+									<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=listar">Tabla Productos</a>
+									<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=formulario">Nuevo Producto</a> 
+						       </c:if>
+							  </div>
+							</div>
+						</li>
+						
+						<li class="nav-item">
+							<div class="dropdown">
+							  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Usuario </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
+							    	<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=listar">Tabla Usuarios</a>
+									<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=formulario">Nuevo Usuario</a> 
+						       </c:if>
+							  </div>
+							</div>
+						</li>
+					
+					</c:if>
 	         
-	             	<li class="nav-item">
-						<div class="dropdown">
-						  <button class="btn btn-secondary dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Producto </button>
-						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
-								<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=listar">Tabla Productos</a>
-								<a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=formulario">Formulario Productos</a> 
-					       </c:if>
-						  </div>
-						</div>
-					</li>
-					
-					<li class="nav-item">
-						<div class="dropdown">
-						  <button class="btn btn-secondary dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Usuario </button>
-						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
-						    	<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=listar">Tabla Usuarios</a>
-								<a class="py-2 d-none d-md-inline-block" href="seguridad/usuarios?accion=formulario">Formulario Usuarios</a> 
-					       </c:if>
-						  </div>
-						</div>
-					</li>
-					
-					
-					<!-- USUARIO NORMAL -->
-					
+	             	
+					<!-- USUARIO NORMAL -->	
 					<c:if test="${usuarioLogeado.rol.id eq 1 }" >
 						<a class="py-2 d-none d-md-inline-block text-white" href="mipanel/index.jsp">Mi panel</a>
-			       </c:if>
-					
-	             
-	             	<li class="nav-item">
-						<div class="dropdown">
-						  <button class="btn btn-secondary dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Producto </button>
-						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						    <c:if test="${usuarioLogeado.rol.id eq 1 }" >
-								<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=listar">Mis Productos</a>
-								<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=formulario">Formulario Crear Nuevo</a> 
-					       </c:if>
-						  </div>
-						</div>
-					</li>
-					
 						
+						<li class="nav-item">
+							<div class="dropdown">
+							  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Producto </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							    <c:if test="${usuarioLogeado.rol.id eq 1 }" >
+									<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=listar">Mis Productos</a>
+									<a class="py-2 d-none d-md-inline-block" href="mipanel/productos?accion=formulario">Nuevo Producto</a> 
+						       </c:if>
+							  </div>
+							</div>
+						</li>
+					</c:if>
 					
-					 <c:if test="${not empty usuarioLogeado}" >
+					
+					<!-- LOGOUT -->	
+					<c:if test="${not empty usuarioLogeado}" >
 					 	<li class="nav-item">
 				            <a class="py-2 d-none d-md-inline-block text-white" href="logout">Cerrar Sesión</a>  
 			            </li>
@@ -124,29 +124,6 @@
 	        </div> <!-- cierre collapse navbar-collapse -->
 	    </div> <!-- cierre container -->
 	</nav>
- 
-  
-  	<!--  
-    <nav class="site-header sticky-top py-1">
-        <div class="container d-flex flex-column flex-md-row justify-content-between">
-            <a class="py-2" href="/supermercadoBD/">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mx-auto" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
-            </a>
-            
-            <c:if test="${empty usuarioLogeado}" >
-            	<a class="py-2 d-none d-md-inline-block" href="login.jsp">Login</a>
-            </c:if>
-            
-            <c:if test="${not empty usuarioLogeado}" >
-            	<a class="py-2 d-none d-md-inline-block" href="seguridad/index.jsp">Dashboard</a>
-	            <a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=listar">Tabla</a>
-	            <a class="py-2 d-none d-md-inline-block" href="seguridad/productos?accion=formulario">Formulario</a> 
-	            <a class="py-2 d-none d-md-inline-block" href="logout">Cerrar Sesión</a>  
-            </c:if>
-            
-        </div>
-    </nav>
-    -->
     
 
     <main class="container">

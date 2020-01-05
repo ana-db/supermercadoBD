@@ -3,6 +3,29 @@
 
 </main>
 
+	<!-- footer -->                                
+    <footer class="bg-primary text-white">
+        <div class="container p-1 p-sm-3 clearfix"> <!-- p-4: padding, p-sm-3 padding para tamaño de dispositivo pequeño -->
+            <nav>
+                <ul class="p-0 d-flex flex-column flex-sm-row justify-content-between"> 
+                    <!-- flex-column> ponemos los enlaces en columnas por defecto -->
+                    <!-- flex-sm-row> los pasamos a filas cuando el dispositivo sea peque;o -->
+                    <!-- justify-content-between> para justificar el contenido y que ocupe todo el ancho de la pantalla -->
+                    <li><a href="/supermercadoBD/">Inicio</a></li>
+                </ul>
+            </nav>
+            
+            <div class="float-right"><!-- <div class="d-flex justify-content-end"> -->
+                <!-- siempre que hagamos que algo flote, el contenedor tiene que tener una clase CLEARFIX -->
+                Java, HTML, CSS, Bases de Datos &copy; 
+                <a class="fab fa-github" href="https://github.com/ana-db/supermercadoBD.git" target=_blank></a> Ana Díez Bravo 2020  
+                <a class="fas fa-shopping-cart"></a>
+            </div>  
+        </div>
+    </footer>
+	
+
+	<!--  
     <div class="footer-wrapper">
         <footer class="container py-5">
             <div class="row">
@@ -22,7 +45,8 @@
 
             </div>    
         </footer>
-    </div>    
+    </div> 
+    -->   
 
     <a id="btn-top" href="#top" class="btn btn-primary">top</a>
 

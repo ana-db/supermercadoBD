@@ -10,14 +10,37 @@
 */
 
 
+/* 5- layouts
+************************************/
+/*
 nav, footer, .footer-wrapper{
     background-color: #DDD;
 }
-
-
+*/
 
 main{
     min-height: 70vh;
+}
+
+/* FOOTER */
+footer {
+    min-height: 10vh;
+}
+
+footer a {
+    color: white;
+}
+
+footer a:hover {
+    color: yellow;
+}
+
+footer li {
+    text-align: center;
+}
+
+ul, ol {
+    list-style: none;
 }
 
 #btn-top{
@@ -34,6 +57,8 @@ main{
 
  }
 
+/* 6- clases 
+************************************/
 
 /* contenedor-productos
 **********************************************/
@@ -172,7 +197,7 @@ main{
 
 /* 7- custom 
 ************************************/
-.fa-shopping-cart{ /* fontawesome */
+.fa-shopping-cart, a.fab.fa-github { /* fontawesome */
 	color: white;
 	font-size: 1em;
     text-decoration: none; /* quita la línea de subrayado del link */
