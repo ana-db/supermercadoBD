@@ -196,12 +196,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		producto.setDescripcion(pDescripcion);
 		producto.setDescuento(pDescuentoInt);
 		
-		//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
-		Usuario u = new Usuario();
-		u.setId(uLogeado.getId()); //u.setId(Integer.parseInt(pUsuarioId)); 
-		producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
-		
-		
+				
 		//nombre más de 2 y menos de 150
 		Set<ConstraintViolation<Producto>> validaciones = validator.validate(producto); //if (pNombre != null && pNombre.length() >= 2 && pNombre.length() <= 50)
 		
@@ -213,19 +208,36 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			try {
 							
 				if ( pId > 0 ) {  //modificar un producto existente
-					LOG.trace("Modificar datos del producto");
-										
-					daoProducto.update(producto, pId);		
-					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
+					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista
+						
+						LOG.trace("Modificar datos del producto");
+											
+						daoProducto.update(producto, pId);		
+						request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
+					
+					}else { //si el usuario que ha iniciado sesión intenta modificar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
+						
+						request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Ese objeto no lo puedes modificar porque no es tuyo"));
+						request.getSession().invalidate();
+						LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
+						
+						vistaSeleccionda = "/login.jsp";	
+					}
 					
 				}else {  //crear nuevo producto
 					LOG.trace("Crear un registro un producto nuevo");
+					
+					//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
+					Usuario u = new Usuario();
+					u.setId(uLogeado.getId()); //u.setId(Integer.parseInt(pUsuarioId)); 
+					producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
 										
 					daoProducto.create(producto);
 					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
 				}
 							
-			} catch (Exception e){
+			} catch (Exception e){ //problemas al añadir el producto en la base de datos
+				LOG.fatal(e);
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));
 			}
 		}
@@ -260,7 +272,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 
 		Producto producto = daoProducto.getById(pId);
 
-		if (pId > 0 && producto.getUsuario().getId() == uLogeado.getId()) { //dejamos que lo elimine
+		if (pId > 0 && producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que lo elimine si el producto es suyo
 
 			try {
 				daoProducto.delete(pId);
