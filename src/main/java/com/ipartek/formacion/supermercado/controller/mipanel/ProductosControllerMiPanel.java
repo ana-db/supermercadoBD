@@ -260,7 +260,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 
 		Producto producto = daoProducto.getById(pId);
 
-		if (pId > 0) {
+		if (pId > 0 && producto.getUsuario().getId() == uLogeado.getId()) { //dejamos que lo elimine
 
 			try {
 				daoProducto.delete(pId);
@@ -268,28 +268,19 @@ public class ProductosControllerMiPanel extends HttpServlet {
 				LOG.info("Se ha comprado " + producto.getNombre());
 			} catch (Exception e) {
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede comprar este producto"));
+				LOG.error("Ha habido un problema y no se ha podido comprar " + producto.getNombre());
 			}
+			
+			listar(request, response);
+			
+		}else { //si el usuario que ha iniciado sesión intenta eliminar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
+			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "ese objeto no lo puedes eliminar porque no es tuyo"));
+			request.getSession().invalidate();
+			LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
+			
+			vistaSeleccionda = "/login.jsp";
 		}
-
-		listar(request, response);
 		
-		/*
-		//////////////// CORRIGIENDO AGUJERO DE SEGURIDAD
-		if (producto.getUsuario().getId() == uLogeado.getId()) {
-			//dejamos que lo elimine
-		}else { //se le invalida la sesión y se le envia al login
-			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "ese objeto no es tuyo"));
-			request.getSession().invalidate();;
-			try {
-				request.getRequestDispatcher("/login.jsp").forward(request, response);
-			} catch (ServletException e) {
-				LOG.warn("Ha saltado una excepción en el controlador");
-			} catch (IOException e) {
-				LOG.warn("Ha saltado una excepción IO");
-			}
-		}
-		*///////////////
-
 	}
 
 	
