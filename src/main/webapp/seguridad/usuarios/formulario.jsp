@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1 class="text-info">Alta y modificación de usuarios</h1>
+	<h1 class="text-center text-info">Alta y modificación de usuarios</h1>
 	
 	<!-- FORMULARIO -->
 	<form action="seguridad/usuarios" method="post">

@@ -3,7 +3,7 @@
 <%@include file="/includes/header.jsp" %>
 
  
-	<h1 class="text-info" id="top">Usuarios</h1>
+	<h1 class="text-center text-info" id="top">Usuarios</h1>
 	
 	
 	<a href="seguridad/usuarios?accion=formulario">Nuevo Usuario</a>
@@ -17,7 +17,7 @@
 	 
 	</style>
 	
-	${usuarios}
+	<!-- ${usuarios} -->
 	
 	
 	<%
