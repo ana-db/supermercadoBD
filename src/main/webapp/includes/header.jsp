@@ -110,6 +110,17 @@
 							  </div>
 							</div>
 						</li>
+						
+						<li class="nav-item">
+							<div class="dropdown">
+							  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Usuario </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							    <c:if test="${usuarioLogeado.rol.id eq 1 }" >
+									<a class="py-2 d-none d-md-inline-block" href="mipanel/usuario?accion=listar">Datos personales</a>
+						       </c:if>
+							  </div>
+							</div>
+						</li>
 					</c:if>
 					
 					
