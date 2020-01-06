@@ -101,6 +101,21 @@
 	               min="0" max="100"
 	               aria-describedby="descuentoHelp">
 		</div>
+		
+		
+		<div class="form-group">
+	        <label for="idUsuario">ID Usuario</label>
+	        <input type="number" 
+	               class="form-control" 
+	               name="idUsuario" id="idUsuario" 
+	               required
+	               readonly
+	               value = "${producto.usuario.id}"
+	               placeholder="Identificador del usuario del producto"
+	               pattern="[0-9]"
+	               min="0" max="100"
+	               aria-describedby="idUsuarioHelp">
+		</div>
 
 	    
 	    <!--
@@ -112,6 +127,9 @@
 				</c:forEach>
 			</select>
 		</div>
+		
+		
+		
 		
  
  		<!--   <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>   -->

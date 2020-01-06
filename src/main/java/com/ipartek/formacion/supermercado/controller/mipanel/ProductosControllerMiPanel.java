@@ -195,6 +195,13 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		producto.setImagen(pImagen);
 		producto.setDescripcion(pDescripcion);
 		producto.setDescuento(pDescuentoInt);
+
+		
+		//recogemos el id del usuario para el producto seleccionado para garantizar la seguridad entre usuarios:
+		String pIdUsuario = request.getParameter("idUsuario");
+		Usuario u = new Usuario();
+		u.setId(Integer.parseInt(pIdUsuario));
+		producto.setUsuario(u);
 		
 				
 		//nombre más de 2 y menos de 150
@@ -208,8 +215,8 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			try {
 							
 				if ( pId > 0 ) {  //modificar un producto existente
-					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista
-						
+					
+					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista	
 						LOG.trace("Modificar datos del producto");
 											
 						daoProducto.update(producto, pId);		
@@ -222,30 +229,33 @@ public class ProductosControllerMiPanel extends HttpServlet {
 						LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
 						
 						vistaSeleccionda = "/login.jsp";	
+
 					}
 					
 				}else {  //crear nuevo producto
 					LOG.trace("Crear un registro un producto nuevo");
 					
 					//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
-					Usuario u = new Usuario();
+					//Usuario u = new Usuario();
 					u.setId(uLogeado.getId()); //u.setId(Integer.parseInt(pUsuarioId)); 
 					producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
 										
 					daoProducto.create(producto);
 					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
+			
 				}
 							
 			} catch (Exception e){ //problemas al añadir el producto en la base de datos
 				LOG.fatal(e);
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));
+				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));	
 			}
 		}
 			
 		request.setAttribute("usuarios", daoUsuario.getAll() ); //devolvemos el dao de usuario para montar el select al modificar el producto y que muetsre todos los posibles usuarios
 		request.setAttribute("productos", producto); // devuelve el dao con todos sus parámetros
 		
-		vistaSeleccionda = VIEW_FORM;			
+		vistaSeleccionda = VIEW_FORM;	
+				
 	}
 
 	
