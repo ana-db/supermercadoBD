@@ -201,7 +201,7 @@ public class ProductoDAO implements IProductoDAO{
 			}
 
 		} catch (Exception e) {
-			LOG.error(e); //e.printStackTrace();
+			LOG.error(e); 
 		}
 		
 		return registro;
@@ -300,7 +300,7 @@ public class ProductoDAO implements IProductoDAO{
 	
 	// 07/01/2020: implementación métodos de la interfaz nueva para ProductoDAO, IProductoDAO:
 	@Override
-	public Producto getByIdByUser(int id, int id_usuario) throws SQLException, ProductoException {
+	public Producto getByIdByUser(int id, int id_usuario) throws ProductoException {
 		Producto p = null;  
 		
 		//obtenemos la conexión:
@@ -314,7 +314,7 @@ public class ProductoDAO implements IProductoDAO{
 
 			//ejecutamos la consulta:
 			try (ResultSet rs = pst.executeQuery()) { //se ejecuta la consulta
-				if(rs.next()) { //si tiene resultado
+				if(rs.next()) { //si tiene resultado, llamamos a la función mapper para guardar los parámetros
 					
 					p = mapper(rs);
 				
@@ -323,7 +323,9 @@ public class ProductoDAO implements IProductoDAO{
 					throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED);
 				}
 			}//try 2 
-		}//try 1
+		}catch (SQLException e) {
+			throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED);
+		}
 		
 		return p; 
 	}
@@ -354,10 +356,16 @@ public class ProductoDAO implements IProductoDAO{
 				throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED); //le pasamos el mensaje que hemos definido como una cte
 			}
 			
-		} catch (Exception e) {
+/*		} catch (Exception e) {
 			LOG.error(e); 
 		}
-		 
+*/		 
+		}catch (SQLException e) {
+			
+			LOG.debug("El nombre del producto ya existe en la base de datos, elige otro");
+			throw e;
+		}	
+			
 		return pojo;
 	}
 
@@ -373,7 +381,7 @@ public class ProductoDAO implements IProductoDAO{
 			pst.setInt(2, id_usuario);
 			LOG.debug(pst);
 			
-			//obtenemos el id antes de elimianrlo:
+			//obtenemos el id antes de eliminarlo:
 			registro = this.getById(id);
 	
 			//eliminamos el producto:
@@ -384,8 +392,7 @@ public class ProductoDAO implements IProductoDAO{
 				
 			}else {
 	
-				//registro = null; //eliminamos
-				LOG.warn("Este producto no se puede eliminar, no pertenece al usuario");
+				LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
 				throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED); //le pasamos el mensaje que hemos definido como una cte
 			}
 		}catch (SQLException e) {

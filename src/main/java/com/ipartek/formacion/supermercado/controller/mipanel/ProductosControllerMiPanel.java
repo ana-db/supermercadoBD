@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import com.ipartek.formacion.supermercado.controller.Alerta;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoDAO;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoException;
-import com.ipartek.formacion.supermercado.modelo.dao.UsuarioDAO;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
@@ -40,7 +39,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	private static String vistaSeleccionda = VIEW_TABLA;
 		
 	private static ProductoDAO daoProducto;
-	private static UsuarioDAO daoUsuario;
 	
 	private Usuario uLogeado;
 	
@@ -73,7 +71,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		daoProducto = ProductoDAO.getInstance();
-		daoUsuario = UsuarioDAO.getInstance();
 		
 		//para inicializar validaciones de parámetros:
 		factory = Validation.buildDefaultValidatorFactory();
@@ -84,7 +81,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	public void destroy() {
 		super.destroy();
 		daoProducto = null;
-		daoUsuario = null;
 		
 		factory = null;
 		validator = null;
@@ -158,11 +154,11 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			isRedirect = true;
 						
 		} catch (Exception e) {
-			LOG.warn("Ha habido algún problema");
+			LOG.warn("Ha habido algún problema" + e);
 			
 		} finally {
 			if(isRedirect) {
-				//invalidamos:
+				////invalidamos la session del usuario => ProductoException
 				response.sendRedirect(request.getContextPath() + "/logout");
 			}else {
 				// ir a JSP:
@@ -185,11 +181,10 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		
 		if (id > 0) {
 
-			productoVisualizar = daoProducto.getByIdByUser(id, uLogeado.getId()); // getById() en IDAO
+			productoVisualizar = daoProducto.getByIdByUser(id, uLogeado.getId()); // productoVisualizar = daoProducto.getById(id);
 
 		}
 	
-		//request.setAttribute("usuarios", daoUsuario.getAll() ); //mostramos los usuarios
 		request.setAttribute("producto", productoVisualizar);
 		vistaSeleccionda = VIEW_FORM;
 	}
@@ -200,7 +195,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		// 2. se creará un registro nuevo en caso contrario, puesto que si id = 0, significa que el producto todavía no está en la lista		
 		
 		
-		// recibir datos del formulario
+		// recibimos los datos del formulario:
 		int pId = Integer.parseInt(request.getParameter("id"));
 		float pPrecioFloat = Float.parseFloat(pPrecio);
 		int pDescuentoInt = Integer.parseInt(pDescuento);
@@ -214,15 +209,19 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		producto.setDescuento(pDescuentoInt);
 
 		
-		//recogemos el id del usuario para el producto seleccionado para garantizar la seguridad entre usuarios:
-		String pIdUsuario = request.getParameter("idUsuario");
+		//recogemos el id del usuario DE LA SESIÓN para el producto seleccionado para mejorar la seguridad:
+/*		String pIdUsuario = request.getParameter("idUsuario");
 		Usuario u = new Usuario();
 		u.setId(Integer.parseInt(pIdUsuario));
 		producto.setUsuario(u);
+*/
+		Usuario u = new Usuario();
+		u.setId(uLogeado.getId()); //así evitamos que se envíe el parámetro desde el formulario
+		producto.setUsuario(u);
+			
 		
-				
 		//nombre más de 2 y menos de 150
-		Set<ConstraintViolation<Producto>> validaciones = validator.validate(producto); //if (pNombre != null && pNombre.length() >= 2 && pNombre.length() <= 50)
+		Set<ConstraintViolation<Producto>> validaciones = validator.validate(producto); 
 		
 		if (validaciones.size() > 0) {
 			
@@ -233,46 +232,14 @@ public class ProductosControllerMiPanel extends HttpServlet {
 							
 				if ( pId > 0 ) {  //modificar un producto existente
 					
-/*					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista	
-						LOG.trace("Modificar datos del producto");
-											
-						daoProducto.update(producto, pId);		
-						request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
-					
-					}else { //si el usuario que ha iniciado sesión intenta modificar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
-						
-						request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Ese objeto no lo puedes modificar porque no es tuyo"));
-						request.getSession().invalidate();
-						LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
-						
-						vistaSeleccionda = "/login.jsp";	
-*/
 						LOG.trace("Modificar datos del producto");
 						
 						daoProducto.updateByUser(pId, uLogeado.getId(), producto);
-						
-						if (pId == uLogeado.getId()){
-							request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
-						}else {
-							request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Este producto no es tuyo, no puedes modificarlo"));
-							request.getSession().invalidate();
-							LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
-							
-							vistaSeleccionda = "/login.jsp";	
-						}
-						
+						request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
+												
 					
 				}else {  //crear nuevo producto
-/*					LOG.trace("Crear un registro un producto nuevo");
-					
-					//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
-					//Usuario u = new Usuario();
-					u.setId(uLogeado.getId()); //u.setId(Integer.parseInt(pUsuarioId)); 
-					producto.setUsuario(u); //guardamos el usuario de la sesión en el producto
-										
-					daoProducto.create(producto);
-					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
-*/
+
 					LOG.trace("Crear un registro un producto nuevo");
 					
 					daoProducto.create(producto);
@@ -289,7 +256,6 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			}
 		}
 			
-		request.setAttribute("usuarios", daoUsuario.getAll() ); //devolvemos el dao de usuario para montar el select al modificar el producto y que muetsre todos los posibles usuarios
 		request.setAttribute("productos", producto); // devuelve el dao con todos sus parámetros
 		
 		vistaSeleccionda = VIEW_FORM;	
@@ -317,56 +283,13 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		
 		// recibimos parámetros:
 		int pId = (request.getParameter("id") == null) ? 0 : Integer.parseInt(request.getParameter("id"));
-/*
-		Producto producto = daoProducto.getById(pId);
-
-		if (pId > 0 && producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que lo elimine si el producto es suyo
-
-			try {
-				daoProducto.delete(pId);
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Has comprado " + producto.getNombre() + " Gracias"));
-				LOG.info("Se ha comprado " + producto.getNombre());
-			} catch (Exception e) {
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede comprar este producto"));
-				LOG.error("Ha habido un problema y no se ha podido comprar " + producto.getNombre());
-			}
-			
-			listar(request, response);
-			
-		}else { //si el usuario que ha iniciado sesión intenta eliminar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
-			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "ese objeto no lo puedes eliminar porque no es tuyo"));
-			request.getSession().invalidate();
-			LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
-			
-			vistaSeleccionda = "/login.jsp";
-		}
-*/
-		
-		Producto producto = new Producto();
 
 		if (pId > 0) { 
-
-			try {
-				//producto = daoProducto.getByIdByUser(pId, uLogeado.getId());
-				
-				producto = daoProducto.deleteByUser(pId, uLogeado.getId());
-				
-				if (pId == uLogeado.getId()){
-					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Has comprado " + producto.getNombre() + " Gracias"));
-					LOG.info("Se ha comprado " + producto.getNombre());
-					
-				}else { //si el usuario que ha iniciado sesión intenta eliminar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
-					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Este producto no es tuyo, no lo puedes eliminar"));
-					request.getSession().invalidate();
-					LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
-					
-					vistaSeleccionda = "/login.jsp";	
-				}
-				
-			} catch (ProductoException e) {
-				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede comprar este producto"));
-				LOG.error("Ha habido un problema y no se ha podido comprar " + producto.getNombre());
-			}
+			
+			Producto producto = daoProducto.deleteByUser(pId, uLogeado.getId());
+			
+			request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Has comprado " + producto.getNombre() + " Gracias"));
+			LOG.info("Se ha comprado " + producto.getNombre());
 			
 			listar(request, response);
 		}
