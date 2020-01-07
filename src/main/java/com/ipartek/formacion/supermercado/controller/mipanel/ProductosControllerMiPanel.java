@@ -1,6 +1,7 @@
 package com.ipartek.formacion.supermercado.controller.mipanel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.controller.Alerta;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoDAO;
+import com.ipartek.formacion.supermercado.modelo.dao.ProductoException;
 import com.ipartek.formacion.supermercado.modelo.dao.UsuarioDAO;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
@@ -48,6 +50,8 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	public static final String ACCION_IR_FORMULARIO = "formulario";
 	public static final String ACCION_GUARDAR = "guardar"; // crear y modificar
 	public static final String ACCION_ELIMINAR = "eliminar";
+	
+	private boolean isRedirect;
 	
 	
 	//Crear Factoria y Validador:
@@ -106,6 +110,8 @@ public class ProductosControllerMiPanel extends HttpServlet {
 
 	protected void doAction(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		isRedirect = false;
 
 		// 1. recogemos parámetros:
 		pAccion = request.getParameter("accion");
@@ -146,19 +152,30 @@ public class ProductosControllerMiPanel extends HttpServlet {
 					listar(request, response);
 					break;
 			}
-
+			
+		} catch (ProductoException e) {
+			LOG.warn("Problema al visualizar el producto" + e);
+			isRedirect = true;
+						
 		} catch (Exception e) {
 			LOG.warn("Ha habido algún problema");
+			
 		} finally {
-			// ir a JSP:
-			request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
+			if(isRedirect) {
+				//invalidamos:
+				response.sendRedirect(request.getContextPath() + "/logout");
+			}else {
+				// ir a JSP:
+				request.getRequestDispatcher(vistaSeleccionda).forward(request, response);
+			}
+			
 		}
 	}
 
 	
 	// métodos:
 
-	private void irFormulario(HttpServletRequest request, HttpServletResponse response) { 
+	private void irFormulario(HttpServletRequest request, HttpServletResponse response) throws SQLException, ProductoException { 
 		//este método sólo nos lleva al formulario, no es para rellenar los campos, para eso utilizamos "guardar"
 
 		// recibimos parámetros:
@@ -168,11 +185,11 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		
 		if (id > 0) {
 
-			productoVisualizar = daoProducto.getById(id); // getById() en IDAO
+			productoVisualizar = daoProducto.getByIdByUser(id, uLogeado.getId()); // getById() en IDAO
 
 		}
 	
-		request.setAttribute("usuarios", daoUsuario.getAll() ); //mostramos los usuarios
+		//request.setAttribute("usuarios", daoUsuario.getAll() ); //mostramos los usuarios
 		request.setAttribute("producto", productoVisualizar);
 		vistaSeleccionda = VIEW_FORM;
 	}
@@ -216,7 +233,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 							
 				if ( pId > 0 ) {  //modificar un producto existente
 					
-					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista	
+/*					if (producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que modifique el producto si está en su lista	
 						LOG.trace("Modificar datos del producto");
 											
 						daoProducto.update(producto, pId);		
@@ -229,11 +246,24 @@ public class ProductosControllerMiPanel extends HttpServlet {
 						LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
 						
 						vistaSeleccionda = "/login.jsp";	
-
-					}
+*/
+						LOG.trace("Modificar datos del producto");
+						
+						daoProducto.updateByUser(pId, uLogeado.getId(), producto);
+						
+						if (pId == uLogeado.getId()){
+							request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Los datos del producto se han modificado correctamente"));
+						}else {
+							request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Este producto no es tuyo, no puedes modificarlo"));
+							request.getSession().invalidate();
+							LOG.warn("Un usuario ha intentado modificar un producto que no le corresponde");
+							
+							vistaSeleccionda = "/login.jsp";	
+						}
+						
 					
 				}else {  //crear nuevo producto
-					LOG.trace("Crear un registro un producto nuevo");
+/*					LOG.trace("Crear un registro un producto nuevo");
 					
 					//recogemos el id del usuario para el producto seleccionado. Utilizamos la variable uLogeado que cogemos de su sesión:
 					//Usuario u = new Usuario();
@@ -242,9 +272,17 @@ public class ProductosControllerMiPanel extends HttpServlet {
 										
 					daoProducto.create(producto);
 					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
-			
+*/
+					LOG.trace("Crear un registro un producto nuevo");
+					
+					daoProducto.create(producto);
+					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Producto nuevo añadido"));
+					
 				}
 							
+			} catch (ProductoException e){
+				LOG.error(e);
+				
 			} catch (Exception e){ //problemas al añadir el producto en la base de datos
 				LOG.fatal(e);
 				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "El producto no se puede añadir a la base de datos, su nombre ya existe. Elige otro, por favor"));	
@@ -275,11 +313,11 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	}
 	
 
-	private void eliminar(HttpServletRequest request, HttpServletResponse response) {
+	private void eliminar(HttpServletRequest request, HttpServletResponse response) throws SQLException, ProductoException{
 		
 		// recibimos parámetros:
 		int pId = (request.getParameter("id") == null) ? 0 : Integer.parseInt(request.getParameter("id"));
-
+/*
 		Producto producto = daoProducto.getById(pId);
 
 		if (pId > 0 && producto.getUsuario().getId() == uLogeado.getId()) { //Seguridad: sólo dejamos que lo elimine si el producto es suyo
@@ -301,6 +339,36 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
 			
 			vistaSeleccionda = "/login.jsp";
+		}
+*/
+		
+		Producto producto = new Producto();
+
+		if (pId > 0) { 
+
+			try {
+				//producto = daoProducto.getByIdByUser(pId, uLogeado.getId());
+				
+				producto = daoProducto.deleteByUser(pId, uLogeado.getId());
+				
+				if (pId == uLogeado.getId()){
+					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_PRIMARY, "Has comprado " + producto.getNombre() + " Gracias"));
+					LOG.info("Se ha comprado " + producto.getNombre());
+					
+				}else { //si el usuario que ha iniciado sesión intenta eliminar un producto de otro usuario mediante la url, se le invalida la sesión y se le envía al login
+					request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "Este producto no es tuyo, no lo puedes eliminar"));
+					request.getSession().invalidate();
+					LOG.warn("Un usuario ha intentado comprar un producto que no le corresponde");
+					
+					vistaSeleccionda = "/login.jsp";	
+				}
+				
+			} catch (ProductoException e) {
+				request.setAttribute("mensajeAlerta", new Alerta(Alerta.TIPO_DANGER, "No se puede comprar este producto"));
+				LOG.error("Ha habido un problema y no se ha podido comprar " + producto.getNombre());
+			}
+			
+			listar(request, response);
 		}
 		
 	}
