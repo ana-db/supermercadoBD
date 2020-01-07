@@ -363,7 +363,7 @@ public class ProductoDAO implements IProductoDAO{
 
 
 	@Override
-	public Producto deleteByUser(int id, int id_usuario) throws SQLException, ProductoException {
+	public Producto deleteByUser(int id, int id_usuario) throws ProductoException {
 		
 		Producto registro = null;
 		
@@ -388,6 +388,8 @@ public class ProductoDAO implements IProductoDAO{
 				LOG.warn("Este producto no se puede eliminar, no pertenece al usuario");
 				throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED); //le pasamos el mensaje que hemos definido como una cte
 			}
+		}catch (SQLException e) {
+			throw new ProductoException(ProductoException.EXCEPTION_UNAUTORIZED);
 		}
 		
 		return registro;
