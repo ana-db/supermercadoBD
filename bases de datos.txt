@@ -80,3 +80,40 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 08/01/2020:
 
 
+- Procedimientos almacenados. Procedimientos y Funciones
+	- creamos tabla categorías y procedimiento con Heidi
+
+
+CONSULTA INSERT HEIDI
+-- declaramos una variable usando @
+SET @id_generado = 0;
+
+-- llamamos al procedimiento almacenado
+CALL `pa_categoria_insert`('nuevo2', @id_generado);
+
+-- consultamos la variable con una SELECT, no podemos hacer syso
+SELECT @id_generado;
+
+SELECT * FROM categoria;
+
+
+
+
+- Procedimientos Almacenados
+- Script Base Datos 'Gestion Docentes' con Procedimientos Almacenados
+- Ejemplo Procedimiento Almacenado Oracle desde Java --> https://www.mkyong.com/jdbc/jdbc-callablestatement-stored-procedure-out-parameter-example/
+	String runSP = "{ call get_employee_by_id(?,?,?,?) }";   --> 4 parámetros (?)
+
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521:orcl", "system", "Password123");
+             Statement statement = conn.createStatement();
+             CallableStatement callableStatement = conn.prepareCall(runSP)) {
+
+            // create or replace stored procedure
+            statement.execute(createSP);
+
+            callableStatement.setInt(1, 3); --> 1er parámetro con valor 3
+
+            callableStatement.registerOutParameter(2, java.sql.Types.VARCHAR); --> como todavía no sabemos el valor del parámetro, le pasamos su tipo
+            callableStatement.registerOutParameter(3, Types.DECIMAL);
+            callableStatement.registerOutParameter(4, java.sql.Types.DATE);
