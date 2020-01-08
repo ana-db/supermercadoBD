@@ -20,8 +20,10 @@ import javax.validation.ValidatorFactory;
 import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.controller.Alerta;
+import com.ipartek.formacion.supermercado.modelo.dao.CategoriaDAO;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoDAO;
 import com.ipartek.formacion.supermercado.modelo.dao.ProductoException;
+import com.ipartek.formacion.supermercado.modelo.pojo.Categoria;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
@@ -39,6 +41,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	private static String vistaSeleccionda = VIEW_TABLA;
 		
 	private static ProductoDAO daoProducto;
+	private static CategoriaDAO daoCategoria;
 	
 	private Usuario uLogeado;
 	
@@ -66,11 +69,14 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	String pDescripcion;
 	String pDescuento;
 	
+	String pIdCategoria;
+	
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		daoProducto = ProductoDAO.getInstance();
+		daoCategoria = CategoriaDAO.getInstance();
 		
 		//para inicializar validaciones de parámetros:
 		factory = Validation.buildDefaultValidatorFactory();
@@ -81,6 +87,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 	public void destroy() {
 		super.destroy();
 		daoProducto = null;
+		daoCategoria = null;
 		
 		factory = null;
 		validator = null;
@@ -122,6 +129,8 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		//ahora no vamos a recibir el usuario por parámetro sino que lo cogemos de la sesión para evitar que se envíe el usuario desde el formulario:
 		HttpSession sesion = request.getSession();
 		uLogeado = (Usuario) sesion.getAttribute("usuarioLogeado"); //en 1 línea: uLogeado = (Usuario)request.getSession().getAttribute("usuarioLogeado");
+		
+		pIdCategoria = request.getParameter("idCategoria");
 		
 		
 		try {
@@ -185,6 +194,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 
 		}
 	
+		request.setAttribute("categorias", daoCategoria.getAll()); //para mostrar las categorías en un desplegable
 		request.setAttribute("producto", productoVisualizar);
 		vistaSeleccionda = VIEW_FORM;
 	}
@@ -199,6 +209,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		int pId = Integer.parseInt(request.getParameter("id"));
 		float pPrecioFloat = Float.parseFloat(pPrecio);
 		int pDescuentoInt = Integer.parseInt(pDescuento);
+		int pIdCategoria = Integer.parseInt(request.getParameter("idCategoria"));
 		
 		Producto producto = new Producto();
 		producto.setId(pId);
@@ -208,7 +219,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		producto.setDescripcion(pDescripcion);
 		producto.setDescuento(pDescuentoInt);
 
-		
+	
 		//recogemos el id del usuario DE LA SESIÓN para el producto seleccionado para mejorar la seguridad:
 /*		String pIdUsuario = request.getParameter("idUsuario");
 		Usuario u = new Usuario();
@@ -218,6 +229,10 @@ public class ProductosControllerMiPanel extends HttpServlet {
 		Usuario u = new Usuario();
 		u.setId(uLogeado.getId()); //así evitamos que se envíe el parámetro desde el formulario
 		producto.setUsuario(u);
+		
+		Categoria c = new Categoria();
+		c.setId(pIdCategoria); 
+		producto.setCategoria(c);
 			
 		
 		//nombre más de 2 y menos de 150
@@ -256,6 +271,7 @@ public class ProductosControllerMiPanel extends HttpServlet {
 			}
 		}
 			
+		request.setAttribute("categorias", daoCategoria.getAll() ); //devolvemos el dao de categoría para montar el select al crear/modificar el producto y que muestre todas las posibles categoría
 		request.setAttribute("productos", producto); // devuelve el dao con todos sus parámetros
 		
 		vistaSeleccionda = VIEW_FORM;	

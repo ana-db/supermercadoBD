@@ -116,7 +116,34 @@
 	               min="0" max="100"
 	               aria-describedby="idUsuarioHelp">
 		</div>
-
+		
+		<!--  
+		<div class="form-group">
+	        <label for="idCategoria">ID Categoria del producto</label>
+	        <input type="number" 
+	               class="form-control" 
+	               name="idCategoria" id="idCategoria" 
+	               required
+	               value = "${producto.categoria.id}"
+	               placeholder="Identificador de la categoria del producto"
+	               pattern="[0-9]"
+	               min="0" max="10"
+	               aria-describedby="idCategoriaHelp">
+		</div>
+		-->
+	    
+	    <div class="form-group">		
+			<label>Categoría del producto</label>
+			<select name="idCategoria" class="custom-select">
+				<c:forEach items="${categorias}" var="c">
+					<option value="${c.id}"  ${(c.id eq producto.categoria.id)?"selected":""} >${c.nombre}</option>	
+				</c:forEach>
+			</select>
+		</div>
+	    
+	    
+	    
+	    
 	    
 	    <!--
 	   <div class="form-group">		

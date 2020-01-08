@@ -38,6 +38,7 @@
 	            <th>Descripción</th>
 	            <th>Descuento</th>
 	            <th>Usuario</th>
+	            <th>Categoria</th>
 	            <th>Acción</th>
 	        </tr>
 	    </thead>
@@ -53,6 +54,7 @@
 					<td>${p.descripcion}</td>
 					<td>${p.descuento}</td>
 					<td>${p.usuario.nombre}</td>
+					<td>${p.categoria.nombre}</td>
 					<td><a href="mipanel/productos?accion=formulario&id=${p.id}">Editar</a>, <a href="mipanel/productos?accion=eliminar&id=${p.id}">Comprar</a></td>
 				</tr>
 			</c:forEach>
@@ -68,6 +70,7 @@
 	              <th>Descripción</th>
 	              <th>Descuento</th>
 	              <th>Usuario</th>
+	              <th>Categoria</th>
 	              <th>Acción</th>
 	          </tr>
 		</tfoot>
