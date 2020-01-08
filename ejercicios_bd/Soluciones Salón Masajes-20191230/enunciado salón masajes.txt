@@ -1,0 +1,13 @@
+Ejercicio Salón Masajes
+
+
+Necesitamos crear un modelo de datos para gestionar un "Salón de Masajes".
+
+El salón de masajes ofrece diferentes servicios, cada uno con su precio. Por ejemplo: masaje facial, drenaje linfático, cobertura de algas, cobertura de barro, etc..
+
+Por otro lado necesitamos saber los datos de los clientes que comprar estos servicios ( nombre, apellidos, dni y teléfono ). Es necesario también saber la fecha de cuando se realizo este servicio.
+
+En nuestro salón de masajes tenemos diferentes trabajadores  ( nombre, apellidos, dni ) que realizan los servicios, por lo cual necesitamos saber que trabajado a estado con cada cliente y los servicios ofrecidos.
+
+Después de cada servicio los clientes pueden dar su valoración del servicio, escribiendo una reseña y calificando el servicio de la siguiente manera: "No recomendable", "Aceptable", "Para Repetir"
+
