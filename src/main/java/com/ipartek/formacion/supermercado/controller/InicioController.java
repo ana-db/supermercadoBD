@@ -93,10 +93,30 @@ public class InicioController extends HttpServlet {
 		//1 producto para hacer la prueba:
 		//request.setAttribute("producto", new Producto() );
 		
+		//TODO creamos 1 categoría, la eliminamos y la actualizamos aquí para hacer pruebas) --> se debería hacer en el controlador del backoffice:
+		try {
+			
+			Categoria c = new Categoria();
+			c.setNombre("mock" + System.currentTimeMillis() );
+			
+			daoCategoria.create(c);
+			
+			//daoCategoria.delete(c.getId());
+			
+			daoCategoria.update(c, 1);
+			
+			//daoCategoria.getById(1);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 		//lista de productos:
 		//llamamos al DAO capa modelo
 		ArrayList<Producto> productos = (ArrayList<Producto>) daoProducto.getAll();
 		ArrayList<Categoria> categorias = (ArrayList<Categoria>) daoCategoria.getAll();
+		
 		
 		request.setAttribute("productos", productos );
 		request.setAttribute("categorias", categorias );

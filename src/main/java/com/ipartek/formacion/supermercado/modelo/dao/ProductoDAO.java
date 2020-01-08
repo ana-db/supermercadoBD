@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
+import com.ipartek.formacion.supermercado.modelo.pojo.Categoria;
 import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 import com.ipartek.formacion.supermercado.modelo.pojo.Usuario;
 
@@ -21,17 +22,26 @@ public class ProductoDAO implements IProductoDAO{
 	private static ProductoDAO INSTANCE;
 
 	//ctes para la consulta a la base de datos:
-	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+/*	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
 												" WHERE p.id_usuario = u.id " + 
-												" ORDER BY p.id DESC LIMIT 500;";
+												" ORDER BY p.id DESC LIMIT 500;";	*/
 	//usamos el alias 'id_producto' para p.id  para distinguirlo del campo id de la tabla usuario
+	
+	private static final String SQL_GET_ALL = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario', c.id 'id_categoria', c.nombre 'nombre_categoria' " + 
+												" FROM producto p, usuario u, categoria c " + 
+												" WHERE p.id_usuario = u.id AND p.id_categoria = c.id" + 
+												" ORDER BY p.id DESC LIMIT 500;";
 	
 	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
 	
-	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+/*	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
 												" WHERE p.id_usuario = u.id AND p.id= ? " + 
+												" ORDER BY p.id DESC LIMIT 500;";	*/
+	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario', c.id 'id_categoria', c.nombre 'nombre_categoria' " + 
+												" FROM producto p, usuario u, categoria c " + 
+												" WHERE p.id_usuario = u.id AND p.id_categoria = c.id AND p.id= ? " + 
 												" ORDER BY p.id DESC LIMIT 500;";
 	
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
@@ -39,18 +49,26 @@ public class ProductoDAO implements IProductoDAO{
 	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
 
 	//private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
-	private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+/*	private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 															" FROM producto p, usuario u " + 
 															" WHERE p.id_usuario = u.id AND id_usuario= ? " + 
+															" ORDER BY p.id DESC LIMIT 500;";	*/
+	private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario', c.id 'id_categoria', c.nombre 'nombre_categoria' " + 
+															" FROM producto p, usuario u, categoria c " + 
+															" WHERE p.id_usuario = u.id AND p.id_categoria = c.id AND id_usuario= ? " + 
 															" ORDER BY p.id DESC LIMIT 500;";
 	
 	
 	// 07/01/2020: SQLs para utilizar con la interfaz nueva para ProductoDAO, IProductoDAO:
 	private static final String SQL_UPDATE_BY_USER = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=? WHERE `id`=? AND `id_usuario`=?;";
 	private static final String SQL_DELETE_BY_USER = "DELETE FROM producto WHERE id = ? AND id_usuario = ?;";
-	private static final String SQL_GET_BY_ID_BY_USER = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
+/*	private static final String SQL_GET_BY_ID_BY_USER = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 														" FROM producto p, usuario u " + 
 														" WHERE p.id_usuario = u.id AND p.id= ? AND u.id= ?" + 
+														" ORDER BY p.id DESC LIMIT 500;"; 	*/
+	private static final String SQL_GET_BY_ID_BY_USER = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario', c.id 'id_categoria', c.nombre 'nombre_categoria' " + 
+														" FROM producto p, usuario u, categoria c " + 
+														" WHERE p.id_usuario = u.id AND p.id_categoria = c.id AND p.id= ? AND u.id= ?" + 
 														" ORDER BY p.id DESC LIMIT 500;";
 	
 	
@@ -293,6 +311,11 @@ public class ProductoDAO implements IProductoDAO{
 		u.setId(rs.getInt("id_usuario"));
 		u.setNombre(rs.getString("nombre_usuario"));
 		p.setUsuario(u);
+		
+		Categoria c = new Categoria();
+		c.setId(rs.getInt("id_categoria"));
+		c.setNombre(rs.getString("nombre_categoria"));
+		p.setCategoria(c);
 		
 		return p;
 	}

@@ -28,6 +28,7 @@ public class Producto {
 	private int descuento;
 	
 	private Usuario usuario; //para relación entre tablas usuario-producto base de datos
+	private Categoria categoria; //para relación entre tablas usuario-categoria base de datos
 	 
 	
 	//constructores: 
@@ -40,9 +41,10 @@ public class Producto {
 		this.descripcion = "";
 		this.descuento = DESCUENTO_MIN;
 		this.usuario = new Usuario();
+		this.categoria = new Categoria();
 	}
 	
-	public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento, Usuario usuario) {
+	public Producto(int id, String nombre, float precio, String imagen, String descripcion, int descuento, Usuario usuario, Categoria categoria) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -51,9 +53,10 @@ public class Producto {
 		this.descripcion = descripcion;
 		this.descuento = descuento;
 		this.usuario = usuario;
+		this.categoria = categoria;
 	}
-
 	
+
 	//getters y setters:
 	public int getId() {
 		return id;
@@ -103,12 +106,22 @@ public class Producto {
 		this.descuento = descuento;
 	}
 	
+	//objeto de tipo Usuario:
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	//objeto de tipo Categoria:
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	
@@ -123,7 +136,9 @@ public class Producto {
 	@Override
 	public String toString() {
 		return "Producto [id=" + id + ", nombre=" + nombre + ", precio=" + precio + ", imagen=" + imagen
-				+ ", descripcion=" + descripcion + ", descuento=" + descuento + ", usuario=" + usuario + "]";
+				+ ", descripcion=" + descripcion + ", descuento=" + descuento + ", usuario=" + usuario + ", categoria="
+				+ categoria + "]";
 	}
+	
 	
 }

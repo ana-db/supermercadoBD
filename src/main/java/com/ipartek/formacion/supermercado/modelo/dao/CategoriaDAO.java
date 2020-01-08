@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import com.ipartek.formacion.supermercado.modelo.ConnectionManager;
 import com.ipartek.formacion.supermercado.modelo.pojo.Categoria;
-import com.ipartek.formacion.supermercado.modelo.pojo.Producto;
 
 public class CategoriaDAO implements ICategoriaDAO {
 
@@ -35,8 +34,7 @@ public class CategoriaDAO implements ICategoriaDAO {
 		LOG.trace("Recuperar todas las categorías");
 		List<Categoria> registros = new ArrayList<Categoria>();
 
-		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento
-		// almacenado (prepareCall):
+		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento almacenado (prepareCall):
 		try (Connection con = ConnectionManager.getConnection();
 				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_getall }")) {
 			LOG.debug(cs);
@@ -59,30 +57,129 @@ public class CategoriaDAO implements ICategoriaDAO {
 		}
 
 		return registros;
+		
 	}
 
 	@Override
 	public Categoria getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO tipo getAll pero con 1 parámetro
+		
+		Categoria registro = null;
+		//Categoria registro = new Categoria();
+
+		LOG.trace("Recuperar la categoría según su id");
+
+		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento almacenado (prepareCall):
+		try (Connection con = ConnectionManager.getConnection();
+				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_getbyid(?) }")) {
+			
+			cs.setInt(1, id);
+			LOG.debug(cs);
+
+			// ejecutamos dentro de un try para que se cierre después de ejecutarse:
+			try (ResultSet rs = cs.executeQuery()) {
+				// TODO mapper
+
+				while (rs.next()) {
+					
+					registro.setId(rs.getInt("id"));
+					registro.setNombre(rs.getString("nombre"));
+					
+				}
+
+			}
+
+		} catch (SQLException e) {
+			LOG.error(e);
+		}
+
+		return registro;
+		
 	}
 
 	@Override
-	public Categoria delete(int id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Categoria delete(int id) throws Exception {    //eliminando categoría
+
+		Categoria registro = null;
+		
+		LOG.trace("Eliminar categoría");
+
+		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento almacenado (prepareCall):	
+		try (Connection con = ConnectionManager.getConnection();
+				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_delete(?) }")) {
+
+			cs.setInt(1, id);
+			LOG.debug(cs);
+			
+			//obtenemos el id antes de elimianrlo:
+			registro = this.getById(id);
+
+			//eliminamos el prodcuto:
+			int affetedRows = cs.executeUpdate();
+			if (affetedRows != 1) {
+				registro = null; //eliminamos
+				throw new Exception("No se puede eliminar " + registro);
+			}
+
+		} catch (Exception e) {
+			LOG.error(e); 
+		}
+		
+		return registro;
+	
 	}
 
 	@Override
 	public Categoria update(Categoria pojo, int id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		LOG.trace("Modificar categoría");
+
+		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento almacenado (prepareCall):	
+		try (Connection con = ConnectionManager.getConnection();
+				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_update(?, ?) }")) {
+
+			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+			cs.setString(1, pojo.getNombre());
+			cs.setInt(2, id);
+			LOG.debug(cs);
+
+			int affetedRows = cs.executeUpdate();
+			if (affetedRows == 1) {
+				pojo.setId(id);
+			} else {
+				throw new Exception ("No se encontró registro para id = " + id);
+			}
+		}
+		 
+		return pojo;
 	}
 
 	@Override
 	public Categoria create(Categoria pojo) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Categoria registro = pojo; //devolvemos el mismo parámetro que hemos recibido
+		
+		LOG.trace("Insertar nueva categorías" + pojo);
+
+		// conseguimos la conexión (getConnection) y hacemos la llamada al procedimiento almacenado (prepareCall):	
+		try (Connection con = ConnectionManager.getConnection();
+				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_insert(?, ?) }")) {
+			
+			//parámetro de entrada (1ª ?):
+			cs.setString(1, pojo.getNombre());
+			
+			//parámetro de salida (2ª ?):
+			cs.registerOutParameter(2, java.sql.Types.INTEGER);
+			
+			LOG.debug(cs);
+			
+			//ejecutamos el procedimiento almacenado executeUpdate, CUIDADO porque NO es una SELECT --> executeQuery:
+			cs.executeUpdate();
+			
+			//una vez ejecutado, podemos recuperar el parámetro de salida (2ª ?):
+			pojo.setId(cs.getInt(2));
+		}	
+			
+		return registro;
 	}
 
 }
