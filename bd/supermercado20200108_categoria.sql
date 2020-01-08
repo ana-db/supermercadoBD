@@ -24,15 +24,19 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   `nombre` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla supermercado.categoria: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.categoria: ~3 rows (aproximadamente)
 DELETE FROM `categoria`;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`id`, `nombre`) VALUES
 	(1, 'Alimentación'),
 	(3, 'Electrodomésticos'),
-	(2, 'Música');
+	(7, 'mock1578482050268'),
+	(8, 'mock1578482060328'),
+	(2, 'Música'),
+	(4, 'nuevo'),
+	(6, 'nuevo2');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.producto
@@ -101,7 +105,7 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `desc
 	(58, 'Uvas', 3.3, 'https://supermercado.eroski.es/images/17778762.jpg', 'Uva blanca sin semilla, cubeta 500 g', 15, 4, 1),
 	(60, 'Mazapan', 7, 'https://supermercado.eroski.es/images/21417050.jpg', 'Mazapan de caramelo-arandanos CASA ECEIZA, bandeja 250 g', 20, 9, 1),
 	(61, 'Lentejas', 3, 'https://supermercado.eroski.es/images/5215.jpg', 'Lenteja pardina extra LUENGO, paquete 1 kg', 30, 8, 1),
-	(62, 'Producto de prueba 1', 10, 'https://image.flaticon.com/icons/png/512/372/372627.png', 'Producto de prueba 1', 10, 4, 1);
+	(62, 'Producto de prueba 1', 10, 'https://image.flaticon.com/icons/png/512/372/372627.png', 'Producto de prueba 1', 10, 4, 2);
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.rol
@@ -148,6 +152,20 @@ INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`, `id_rol`) VALUES
 	(19, 'nuevoNuevo', 'nuevoNuevo', 1);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
+-- Volcando estructura para procedimiento supermercado.pa_categoria_delete
+DROP PROCEDURE IF EXISTS `pa_categoria_delete`;
+DELIMITER //
+CREATE PROCEDURE `pa_categoria_delete`(
+	IN `p_id` INT
+)
+BEGIN
+
+	-- el eliminamos el registro con el id que nos pasan por parámetro
+	DELETE FROM categoria WHERE id = p_id;
+
+END//
+DELIMITER ;
+
 -- Volcando estructura para procedimiento supermercado.pa_categoria_getall
 DROP PROCEDURE IF EXISTS `pa_categoria_getall`;
 DELIMITER //
@@ -159,6 +177,24 @@ BEGIN
 		también se puden añadir comentarios de bloque
 	*/
 	SELECT id, nombre FROM categoria ORDER BY nombre ASC LIMIT 500;
+
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento supermercado.pa_categoria_insert
+DROP PROCEDURE IF EXISTS `pa_categoria_insert`;
+DELIMITER //
+CREATE PROCEDURE `pa_categoria_insert`(
+	IN `p_nombre` VARCHAR(100),
+	OUT `p_id` INT
+)
+BEGIN
+
+	-- crear nuevo registro 
+	INSERT INTO categoria (nombre) VALUES (p_nombre);
+	
+	-- obtener el ID generado y SETearlo al prámetro de salida
+	SET p_id = LAST_INSERT_ID();
 
 END//
 DELIMITER ;
