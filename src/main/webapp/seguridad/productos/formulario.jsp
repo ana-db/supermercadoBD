@@ -124,6 +124,16 @@
 			</select>
 		</div>
 		
+		
+		<div class="form-group">		
+			<label>Categoría del producto</label>
+			<select name="idCategoria" class="custom-select">
+				<c:forEach items="${categorias}" var="c">
+					<option value="${c.id}"  ${(c.id eq producto.categoria.id)?"selected":""} >${c.nombre}</option>	
+				</c:forEach>
+			</select>
+		</div>
+		
  
  		<!--   <button type="submit" class="btn btn-block btn-outline-primary">Crear</button>   -->
 	    <input type="submit" class="btn btn-block btn-outline-primary" value="${(producto.id>0)?"Modificar":"Crear" }">    <!-- para que el botón cambie de texto cuando queremos crear/modificar -->
