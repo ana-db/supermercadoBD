@@ -1,7 +1,7 @@
 MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 
-26/12:
+26/12/2019:
 	- java 7 Autoclosable
 		- intro
 		- Antes de Java 7
@@ -21,7 +21,7 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 -------------------------------------------------------------------
 
 
-27/12:
+27/12/2019:
 
 - ACID
 	- Atomicidad: o se hacen todos los pasos o ninguno (si se saca dinero del banco para ingresar en otra cuenta y no se lleva a cabo, no se quedan las 2 cuentas sin el dinero). Commit y rollback
@@ -37,7 +37,7 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 -------------------------------------------------------------------
 
 
-30/12:
+30/12/2019:
 
 - JOINs combinar varias tablas
 	- normalmente usamos inner join
@@ -70,4 +70,13 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 		--> si la relación es N a N, sacamos una tabla nueva
 	- Quinto Nivel de F/N
 		1. La tabla original debe ser reconstruida desde las tablas resultantes en las cuales ha sido troceada. 
+
+- Hacemos un test de 20 preguntas con lo que hemos dado hasta aquí
+
+
+-------------------------------------------------------------------
+
+
+08/01/2020:
+
 
