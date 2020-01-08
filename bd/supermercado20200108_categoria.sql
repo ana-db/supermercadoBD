@@ -24,15 +24,18 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   `nombre` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla supermercado.categoria: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.categoria: ~9 rows (aproximadamente)
 DELETE FROM `categoria`;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`id`, `nombre`) VALUES
 	(1, 'Alimentación'),
 	(3, 'Electrodomésticos'),
 	(7, 'mock1578482050268'),
+	(11, 'mock1578488025780'),
+	(12, 'mock1578488094085'),
+	(13, 'mock1578488156195'),
 	(8, 'modificando'),
 	(2, 'Música'),
 	(4, 'nuevo'),
@@ -176,7 +179,7 @@ BEGIN
 	/*
 		también se puden añadir comentarios de bloque
 	*/
-	SELECT id, nombre FROM categoria ORDER BY nombre ASC LIMIT 500;
+	SELECT id, nombre FROM categoria ORDER BY id ASC LIMIT 500;
 
 END//
 DELIMITER ;
