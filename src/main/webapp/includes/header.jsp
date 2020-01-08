@@ -91,6 +91,18 @@
 							  </div>
 							</div>
 						</li>
+						
+						<li class="nav-item">
+							<div class="dropdown">
+							  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Categoría </button>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							    <c:if test="${usuarioLogeado.rol.id eq 2 }" >
+							    	<a class="py-2 d-none d-md-inline-block" href="seguridad/categorias?accion=listar">Tabla Categorias</a>
+									<a class="py-2 d-none d-md-inline-block" href="seguridad/categorias?accion=formulario">Nueva Categoria</a> 
+						       </c:if>
+							  </div>
+							</div>
+						</li>
 					
 					</c:if>
 	         
