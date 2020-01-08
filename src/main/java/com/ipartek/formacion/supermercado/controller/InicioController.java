@@ -98,14 +98,17 @@ public class InicioController extends HttpServlet {
 			
 			Categoria c = new Categoria();
 			c.setNombre("mock" + System.currentTimeMillis() );
+/*			
+			daoCategoria.create(c);
+			daoCategoria.delete(c.getId());
 			
 			daoCategoria.create(c);
 			
-			//daoCategoria.delete(c.getId());
-			
+			c.setNombre(c.getNombre() + "modificado");
 			daoCategoria.update(c, 1);
 			
-			//daoCategoria.getById(1);
+			daoCategoria.getById(1);
+	*/		
 			
 		} catch (Exception e) {
 			e.printStackTrace();

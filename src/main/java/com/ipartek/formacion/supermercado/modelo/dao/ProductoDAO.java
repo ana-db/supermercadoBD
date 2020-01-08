@@ -33,7 +33,8 @@ public class ProductoDAO implements IProductoDAO{
 												" WHERE p.id_usuario = u.id AND p.id_categoria = c.id" + 
 												" ORDER BY p.id DESC LIMIT 500;";
 	
-	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
+//	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`) VALUES (?, ?, ?, ?, ?, ?);";
+	private static final String SQL_INSERT = "INSERT INTO `producto` (`nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`, `id_categoria`) VALUES (?, ?, ?, ?, ?, ?, ?);";
 	
 /*	private static final String SQL_GET_BY_ID = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 												" FROM producto p, usuario u " + 
@@ -138,6 +139,7 @@ public class ProductoDAO implements IProductoDAO{
 			pst.setString(4, pojo.getDescripcion());
 			pst.setInt(5, pojo.getDescuento());
 			pst.setInt(6, pojo.getUsuario().getId() ); //añadimos usuario
+			pst.setInt(7, pojo.getCategoria().getId() ); //añadimos categoria
 			LOG.debug(pst);
 			
 			

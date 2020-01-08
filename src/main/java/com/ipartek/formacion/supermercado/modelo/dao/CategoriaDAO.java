@@ -64,8 +64,8 @@ public class CategoriaDAO implements ICategoriaDAO {
 	public Categoria getById(int id) {
 		// TODO tipo getAll pero con 1 parámetro
 		
-		Categoria registro = null;
-		//Categoria registro = new Categoria();
+		//Categoria registro = null;
+		Categoria registro = new Categoria();
 
 		LOG.trace("Recuperar la categoría según su id");
 
@@ -73,6 +73,7 @@ public class CategoriaDAO implements ICategoriaDAO {
 		try (Connection con = ConnectionManager.getConnection();
 				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_getbyid(?) }")) {
 			
+			//parámetro de entrada (1era y única ?):
 			cs.setInt(1, id);
 			LOG.debug(cs);
 
@@ -108,13 +109,14 @@ public class CategoriaDAO implements ICategoriaDAO {
 		try (Connection con = ConnectionManager.getConnection();
 				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_delete(?) }")) {
 
+			//parámetro de entrada (1era y única ?):
 			cs.setInt(1, id);
 			LOG.debug(cs);
 			
-			//obtenemos el id antes de elimianrlo:
+			//obtenemos el id antes de eliminarlo:
 			registro = this.getById(id);
 
-			//eliminamos el prodcuto:
+			//eliminamos el producto:
 			int affetedRows = cs.executeUpdate();
 			if (affetedRows != 1) {
 				registro = null; //eliminamos
@@ -137,17 +139,22 @@ public class CategoriaDAO implements ICategoriaDAO {
 		try (Connection con = ConnectionManager.getConnection();
 				CallableStatement cs = con.prepareCall("{ CALL pa_categoria_update(?, ?) }")) {
 
-			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+			//parámetros de entrada (1ª y 2ª ?):
 			cs.setString(1, pojo.getNombre());
 			cs.setInt(2, id);
+			
+			//parámetro de salida (2ª ?), será el id de la categoría:
+			cs.registerOutParameter(2, java.sql.Types.INTEGER);
+			
 			LOG.debug(cs);
+			
+			//ejecutamos el procedimiento almacenado executeUpdate, CUIDADO porque NO es una SELECT --> executeQuery:
+			cs.executeUpdate();
+			
+			//una vez ejecutado, podemos recuperar el parámetro de salida (2ª ?):
+			pojo.setId(cs.getInt(2));
+			
 
-			int affetedRows = cs.executeUpdate();
-			if (affetedRows == 1) {
-				pojo.setId(id);
-			} else {
-				throw new Exception ("No se encontró registro para id = " + id);
-			}
 		}
 		 
 		return pojo;
