@@ -24,16 +24,16 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   `nombre` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla supermercado.categoria: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.categoria: ~7 rows (aproximadamente)
 DELETE FROM `categoria`;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`id`, `nombre`) VALUES
 	(1, 'Alimentación'),
 	(3, 'Electrodomésticos'),
 	(7, 'mock1578482050268'),
-	(8, 'mock1578482060328'),
+	(8, 'modificando'),
 	(2, 'Música'),
 	(4, 'nuevo'),
 	(6, 'nuevo2');
@@ -181,6 +181,22 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Volcando estructura para procedimiento supermercado.pa_categoria_getbyid
+DROP PROCEDURE IF EXISTS `pa_categoria_getbyid`;
+DELIMITER //
+CREATE PROCEDURE `pa_categoria_getbyid`(
+	IN `p_id` INT
+)
+BEGIN
+
+	SELECT id, nombre
+	FROM categoria
+	WHERE id = p_id
+	ORDER BY id DESC LIMIT 500;
+	
+END//
+DELIMITER ;
+
 -- Volcando estructura para procedimiento supermercado.pa_categoria_insert
 DROP PROCEDURE IF EXISTS `pa_categoria_insert`;
 DELIMITER //
@@ -195,6 +211,22 @@ BEGIN
 	
 	-- obtener el ID generado y SETearlo al prámetro de salida
 	SET p_id = LAST_INSERT_ID();
+
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento supermercado.pa_categoria_update
+DROP PROCEDURE IF EXISTS `pa_categoria_update`;
+DELIMITER //
+CREATE PROCEDURE `pa_categoria_update`(
+	IN `p_id` INT,
+	IN `p_nombre` VARCHAR(100)
+)
+BEGIN
+
+	UPDATE categoria 
+	SET nombre = p_nombre
+	WHERE id = p_id;
 
 END//
 DELIMITER ;
