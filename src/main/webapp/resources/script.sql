@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `categoria` (
   UNIQUE KEY `nombre` (`nombre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla supermercado.categoria: ~9 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.categoria: ~10 rows (aproximadamente)
 DELETE FROM `categoria`;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
 INSERT INTO `categoria` (`id`, `nombre`) VALUES
@@ -231,6 +231,90 @@ BEGIN
 	SET nombre = p_nombre
 	WHERE id = p_id;
 
+END//
+DELIMITER ;
+
+-- Volcando estructura para función supermercado.GET_MES
+DROP FUNCTION IF EXISTS `GET_MES`;
+DELIMITER //
+CREATE FUNCTION `GET_MES`(
+	`pFecha` DATE
+) RETURNS varchar(100) CHARSET utf8
+    DETERMINISTIC
+    COMMENT 'Función que devuelve el nombre del mes en castellano ( ''enero'',febrero'',... ). Como parámetro de entrada vamos a recibir un dato de tipo DATE. Pistas: usar función CASE y funciones para fechas.'
+BEGIN	
+
+		-- variable de salida:
+		DECLARE mes VARCHAR(20);
+	
+		CASE MONTH(pFecha)
+	      WHEN 1 THEN SET mes = 'Enero';
+	      WHEN 2 THEN SET mes = 'Febrero';
+	      WHEN 3 THEN SET mes = 'Marzo';
+	      WHEN 4 THEN SET mes = 'Abril';
+	      WHEN 5 THEN SET mes = 'Mayo';
+	      WHEN 6 THEN SET mes = 'Junio';
+	      WHEN 7 THEN SET mes = 'Julio';
+	      WHEN 8 THEN SET mes = 'Agosto';
+	      WHEN 9 THEN SET mes = 'Septiembre';
+	      WHEN 10 THEN SET mes = 'Octubre';
+	      WHEN 11 THEN SET mes = 'Noviembre';
+	      ELSE SET mes = 'Diciembre';
+	    END CASE;
+	    
+	    RETURN mes;
+
+/*
+		CASE MONTH(pfecha)
+			WHEN 1 THEN RETURN "Enero";
+			WHEN 2 THEN RETURN "Febrero";
+			WHEN 3 THEN RETURN "Marzo";
+			WHEN 4 THEN RETURN "Abril";
+			WHEN 5 THEN RETURN "Mayo";
+			WHEN 6 THEN RETURN "Junio";
+			WHEN 7 THEN RETURN "Julio";
+			WHEN 8 THEN RETURN "Agosto";
+			WHEN 9 THEN RETURN "Septiembre";
+			WHEN 10 THEN RETURN "Octubre";
+			WHEN 11 THEN RETURN "Noviembre";
+			ELSE RETURN "Diciembre";
+		END CASE;
+	*/
+END//
+DELIMITER ;
+
+-- Volcando estructura para función supermercado.HELLO_WORLD
+DROP FUNCTION IF EXISTS `HELLO_WORLD`;
+DELIMITER //
+CREATE FUNCTION `HELLO_WORLD`() RETURNS varchar(100) CHARSET utf8
+    DETERMINISTIC
+BEGIN
+
+	RETURN "hola mundo";
+
+END//
+DELIMITER ;
+
+-- Volcando estructura para función supermercado.HELLO_WORLD2
+DROP FUNCTION IF EXISTS `HELLO_WORLD2`;
+DELIMITER //
+CREATE FUNCTION `HELLO_WORLD2`(
+	`pNombre` VARCHAR(100)
+) RETURNS varchar(100) CHARSET utf8
+    DETERMINISTIC
+BEGIN
+
+	DECLARE nombre VARCHAR(100) DEFAULT 'anonimo';
+	
+	IF( TRIM(pNombre) != '') THEN
+		SET nombre = pNombre;
+	END IF;
+
+	-- Return "Hello" + pNombre;
+	-- RETURN CONCAT("Hello", " ", pNombre);
+	
+	-- devuelve la variable de salida nombre:
+	RETURN CONCAT("Hello", " ", nombre);
 END//
 DELIMITER ;
 
