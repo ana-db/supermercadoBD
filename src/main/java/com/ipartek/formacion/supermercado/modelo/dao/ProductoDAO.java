@@ -47,7 +47,8 @@ public class ProductoDAO implements IProductoDAO{
 	
 	private static final String SQL_DELETE = "DELETE FROM producto WHERE id = ?;";
 	
-	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+//	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+	private static final String SQL_UPDATE = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=?, `id_categoria`=? WHERE  `id`=?;";
 
 	//private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT * FROM producto WHERE id_usuario = ? ORDER BY id DESC LIMIT 500;";
 /*	private static final String SQL_GET_ALL_BY_ID_USUARIO = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
@@ -61,8 +62,11 @@ public class ProductoDAO implements IProductoDAO{
 	
 	
 	// 07/01/2020: SQLs para utilizar con la interfaz nueva para ProductoDAO, IProductoDAO:
-	private static final String SQL_UPDATE_BY_USER = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=? WHERE `id`=? AND `id_usuario`=?;";
+//	private static final String SQL_UPDATE_BY_USER = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=? WHERE `id`=? AND `id_usuario`=?;";
+	private static final String SQL_UPDATE_BY_USER = "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_categoria`=? WHERE `id`=? AND `id_usuario`=?;";
+	
 	private static final String SQL_DELETE_BY_USER = "DELETE FROM producto WHERE id = ? AND id_usuario = ?;";
+	
 /*	private static final String SQL_GET_BY_ID_BY_USER = "SELECT p.id 'id_producto', p.nombre 'nombre_producto', p.descripcion, p.imagen, p.precio, p.descuento, u.id 'id_usuario', u.nombre 'nombre_usuario' " + 
 														" FROM producto p, usuario u " + 
 														" WHERE p.id_usuario = u.id AND p.id= ? AND u.id= ?" + 
@@ -233,14 +237,15 @@ public class ProductoDAO implements IProductoDAO{
 						
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
 
-			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=? WHERE  `id`=?;";
+			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_usuario`=?, `id_categoria`=? WHERE  `id`=?;";
 			pst.setString(1, pojo.getNombre());
 			pst.setFloat(2, pojo.getPrecio());
 			pst.setString(3, pojo.getImagen());
 			pst.setString(4, pojo.getDescripcion());
 			pst.setInt(5, pojo.getDescuento());
 			pst.setInt(6, pojo.getUsuario().getId());
-			pst.setInt(7, id);
+			pst.setInt(7, pojo.getCategoria().getId());
+			pst.setInt(8, id);
 			LOG.debug(pst);
 
 			int affetedRows = pst.executeUpdate();
@@ -361,14 +366,15 @@ public class ProductoDAO implements IProductoDAO{
 		
 		try (Connection con = ConnectionManager.getConnection(); PreparedStatement pst = con.prepareStatement(SQL_UPDATE_BY_USER);) {
 
-			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=? WHERE `id`=? AND `id_usuario`=?;";
+			//mismo orden que en la sql: "UPDATE `producto` SET `nombre`=?, `precio`=?, `imagen`=?, `descripcion`=?, `descuento`=?, `id_categoria`=? WHERE `id`=? AND `id_usuario`=?;";
 			pst.setString(1, pojo.getNombre());
 			pst.setFloat(2, pojo.getPrecio());
 			pst.setString(3, pojo.getImagen());
 			pst.setString(4, pojo.getDescripcion());
 			pst.setInt(5, pojo.getDescuento());
-			pst.setInt(6, id);
-			pst.setInt(7, id_usuario);
+			pst.setInt(6, pojo.getCategoria().getId());
+			pst.setInt(7, id);
+			pst.setInt(8, id_usuario);
 			LOG.debug(pst);
 			
 			int affetedRows = pst.executeUpdate();

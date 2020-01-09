@@ -53,7 +53,7 @@
 
 
 	<!-- VENTANA MODAL BOOTSTRAP PARA BORRAR -->
-	<c:if test="${usuario.id > 0}">
+	<c:if test="${categoria.id > 0}">
 
 		<!-- Button trigger modal -->
 		<button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal">Eliminar</button>
@@ -69,11 +69,11 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		        ¿Seguro que quieres borrar la categoría ${categoría.nombre} de la base de datos?
+		        ¿Seguro que quieres borrar la categoría ${categoria.nombre} de la base de datos?
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-		        <a class="btn btn-danger" href="seguridad/usuarios?id=${categoria.id}&accion=eliminar">Eliminar</a>
+		        <a class="btn btn-danger" href="seguridad/categorias?id=${categoria.id}&accion=eliminar">Eliminar</a>
 		      </div>
 		    </div>
 		  </div>
