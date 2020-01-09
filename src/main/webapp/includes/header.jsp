@@ -142,6 +142,33 @@
 				            <a class="py-2 d-none d-md-inline-block text-white" href="logout">Cerrar Sesión</a>  
 			            </li>
 		            </c:if>
+		            
+		            
+		            <!-- --------------------------------------------------------------------------------------------------------- -->
+		            <!-- FILTRO BUSCADOR CATEGORÍAS -->	       			
+        			<li class="nav-item">
+						<div class="dropdown">
+						  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Buscador categorias </button>
+						  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						  
+				 
+								<form action="seguridad/productos" method="post">	
+									<div class="form-group">		
+										<select name="idCategoria" class="custom-select">
+											<c:forEach items="${categorias}" var="c">
+												<option value="${c.id}" >${c.nombre}</option>	
+											</c:forEach>
+										</select>
+									</div>
+								    <input type="submit" class="btn btn-block btn-outline-primary" value="Buscar" }">   
+								</form>
+								
+
+						  </div>
+						</div>
+					</li>
+		            
+		            <!-- --------------------------------------------------------------------------------------------------------- -->
 	       
 	            </ul>
 	        </div> <!-- cierre collapse navbar-collapse -->
