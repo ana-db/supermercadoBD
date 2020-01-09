@@ -84,17 +84,17 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 	- creamos tabla categorías y procedimiento con Heidi
 
 
-CONSULTA INSERT HEIDI
--- declaramos una variable usando @
-SET @id_generado = 0;
+		CONSULTA INSERT HEIDI
+		-- declaramos una variable usando @
+		SET @id_generado = 0;
 
--- llamamos al procedimiento almacenado
-CALL `pa_categoria_insert`('nuevo2', @id_generado);
+		-- llamamos al procedimiento almacenado
+		CALL `pa_categoria_insert`('nuevo2', @id_generado);
 
--- consultamos la variable con una SELECT, no podemos hacer syso
-SELECT @id_generado;
+		-- consultamos la variable con una SELECT, no podemos hacer syso
+		SELECT @id_generado;
 
-SELECT * FROM categoria;
+		SELECT * FROM categoria;
 
 
 
@@ -117,3 +117,47 @@ SELECT * FROM categoria;
             callableStatement.registerOutParameter(2, java.sql.Types.VARCHAR); --> como todavía no sabemos el valor del parámetro, le pasamos su tipo
             callableStatement.registerOutParameter(3, Types.DECIMAL);
             callableStatement.registerOutParameter(4, java.sql.Types.DATE);
+
+-------------------------------------------------------------------
+
+
+09/01/2020:
+
+- Funciones
+	- funciones
+	- Funciones Deterministas o no
+		- AVG: hace la media
+		- determinista si siempre devuelve lo mismo
+		- Uso de las variables en funciones
+		- Ejercicio practico fechas
+			- google: mysql datetime functions --> https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html
+								https://dev.mysql.com/doc/refman/5.7/en/case.html
+				- @@lc_time_names --> lc es local
+				- MONTHNAME() devuelve el nombre del mes en inglés por defecto, NOW() (devuelve la fecha hasta ms), CURDATE(), DIFDATE() da la diferencia entre 2 fechas
+
+
+- Triggers - disparadores
+	- se invocan cuando hacemos INSERT, UPDATE y DELETE antes AFTER o después BEFORE del evento.
+	- Nomenclatura: empiezan por t --> tub: trigger update before (1 trigger, 2 acción (INSERT, UPDATE y DELETE), 3 cuándo lanza el trigger(AFTER o BEFORE))
+	- sería mejor hacer el trigger en la base de datos porque puede haber más de una aplicaicón accediendo a ella y evitamos repetir código
+	
+	- Ejemplo de un trigger MySQL:
+
+	A continuación definiremos el trigger. Se ejecutará antes de cada sentencia INSERT para la tabla people:
+	mysql> delimiter //
+	mysql> CREATE TRIGGER agecheck BEFORE INSERT ON people FOR EACH ROW IF NEW.age < 0 THEN SET NEW.age = 0; END IF;//
+	Query OK, 0 rows affected (0.00 sec)
+	mysql> delimiter ;
+
+	comprobamos el parámetro nuevo NEW.age antes de insertarlo en la tabla para coprobar que no sea erróneo
+
+	- OLD y NEW
+
+
+
+
+
+
+
+
+CRUD_productos_y_usuarios_roles_seguridad_en_ProductoDAO_byUser
