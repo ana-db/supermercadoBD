@@ -13,12 +13,10 @@
 
 
 -- Volcando estructura de base de datos para supermercado
-DROP DATABASE IF EXISTS `supermercado`;
 CREATE DATABASE IF NOT EXISTS `supermercado` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `supermercado`;
 
 -- Volcando estructura para tabla supermercado.categoria
-DROP TABLE IF EXISTS `categoria`;
 CREATE TABLE IF NOT EXISTS `categoria` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL DEFAULT '0',
@@ -43,24 +41,26 @@ INSERT INTO `categoria` (`id`, `nombre`) VALUES
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.historico
-DROP TABLE IF EXISTS `historico`;
 CREATE TABLE IF NOT EXISTS `historico` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `precio` float unsigned NOT NULL DEFAULT '0',
-  `fecha` datetime DEFAULT NULL,
+  `precio` float NOT NULL DEFAULT '0',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id_producto` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_producto` (`id_producto`),
   CONSTRAINT `FK_producto` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla supermercado.historico: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.historico: ~3 rows (aproximadamente)
 DELETE FROM `historico`;
 /*!40000 ALTER TABLE `historico` DISABLE KEYS */;
+INSERT INTO `historico` (`id`, `precio`, `fecha`, `id_producto`) VALUES
+	(1, 12, '2020-01-10 08:24:56', 63),
+	(2, 10, '2020-01-10 08:25:07', 63),
+	(3, 50, '2020-01-10 08:27:09', 63);
 /*!40000 ALTER TABLE `historico` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.producto
-DROP TABLE IF EXISTS `producto`;
 CREATE TABLE IF NOT EXISTS `producto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `producto` (
   CONSTRAINT `FK_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla supermercado.producto: ~44 rows (aproximadamente)
+-- Volcando datos para la tabla supermercado.producto: ~48 rows (aproximadamente)
 DELETE FROM `producto`;
 /*!40000 ALTER TABLE `producto` DISABLE KEYS */;
 INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `descuento`, `id_usuario`, `id_categoria`, `fecha_baja`, `fecha_alta`, `fecha_modificacion`) VALUES
@@ -129,14 +129,13 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`, `imagen`, `descripcion`, `desc
 	(60, 'Mazapan', 7, 'https://supermercado.eroski.es/images/21417050.jpg', 'Mazapan de caramelo-arandanos CASA ECEIZA, bandeja 250 g', 20, 9, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(61, 'Lentejas', 3, 'https://supermercado.eroski.es/images/5215.jpg', 'Lenteja pardina extra LUENGO, paquete 1 kg', 30, 8, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(62, 'Producto de prueba 1', 10, 'https://image.flaticon.com/icons/png/512/372/372627.png', 'Producto de prueba 1', 10, 4, 2, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-	(63, 'galletas', 2, 'galletas', 'choco', 0, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(63, 'galletas', 75, 'galletas', 'choco', 0, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(77, 'galletas coco', 2, 'galletas_foto', 'coco', 0, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(78, 'galletas choco', 2, 'galletas_foto', 'choco', 50, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(79, 'galletas nata', 2, 'galletas_foto', 'nata', 100, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `producto` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.rol
-DROP TABLE IF EXISTS `rol`;
 CREATE TABLE IF NOT EXISTS `rol` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '1: Usuario normal  2: Administrador',
   `nombre` varchar(15) NOT NULL DEFAULT '0',
@@ -153,7 +152,6 @@ INSERT INTO `rol` (`id`, `nombre`) VALUES
 /*!40000 ALTER TABLE `rol` ENABLE KEYS */;
 
 -- Volcando estructura para tabla supermercado.usuario
-DROP TABLE IF EXISTS `usuario`;
 CREATE TABLE IF NOT EXISTS `usuario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL DEFAULT '0',
@@ -180,7 +178,6 @@ INSERT INTO `usuario` (`id`, `nombre`, `contrasenia`, `id_rol`) VALUES
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 -- Volcando estructura para procedimiento supermercado.pa_categoria_delete
-DROP PROCEDURE IF EXISTS `pa_categoria_delete`;
 DELIMITER //
 CREATE PROCEDURE `pa_categoria_delete`(
 	IN `p_id` INT
@@ -194,7 +191,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para procedimiento supermercado.pa_categoria_getall
-DROP PROCEDURE IF EXISTS `pa_categoria_getall`;
 DELIMITER //
 CREATE PROCEDURE `pa_categoria_getall`()
 BEGIN
@@ -209,7 +205,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para procedimiento supermercado.pa_categoria_getbyid
-DROP PROCEDURE IF EXISTS `pa_categoria_getbyid`;
 DELIMITER //
 CREATE PROCEDURE `pa_categoria_getbyid`(
 	IN `p_id` INT
@@ -225,7 +220,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para procedimiento supermercado.pa_categoria_insert
-DROP PROCEDURE IF EXISTS `pa_categoria_insert`;
 DELIMITER //
 CREATE PROCEDURE `pa_categoria_insert`(
 	IN `p_nombre` VARCHAR(100),
@@ -243,7 +237,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para procedimiento supermercado.pa_categoria_update
-DROP PROCEDURE IF EXISTS `pa_categoria_update`;
 DELIMITER //
 CREATE PROCEDURE `pa_categoria_update`(
 	IN `p_id` INT,
@@ -259,7 +252,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para función supermercado.GET_MES
-DROP FUNCTION IF EXISTS `GET_MES`;
 DELIMITER //
 CREATE FUNCTION `GET_MES`(
 	`pFecha` DATE
@@ -308,7 +300,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para función supermercado.HELLO_WORLD
-DROP FUNCTION IF EXISTS `HELLO_WORLD`;
 DELIMITER //
 CREATE FUNCTION `HELLO_WORLD`() RETURNS varchar(100) CHARSET utf8
     DETERMINISTIC
@@ -320,7 +311,6 @@ END//
 DELIMITER ;
 
 -- Volcando estructura para función supermercado.HELLO_WORLD2
-DROP FUNCTION IF EXISTS `HELLO_WORLD2`;
 DELIMITER //
 CREATE FUNCTION `HELLO_WORLD2`(
 	`pNombre` VARCHAR(100)
@@ -342,8 +332,23 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Volcando estructura para disparador supermercado.tau_producto_historico
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `tau_producto_historico` AFTER UPDATE ON `producto` FOR EACH ROW BEGIN
+
+	-- cada vez que se actualice el precio de un producto, se copiará su nombre y precio en la tabla histórico:
+	-- (el id y la fecha se actualizarán solos)
+	
+	IF NEW.precio <> OLD.precio THEN  
+		INSERT INTO historico (precio, id_producto) VALUES (OLD.precio, OLD.id);
+	END IF;	
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 -- Volcando estructura para disparador supermercado.tbi_producto
-DROP TRIGGER IF EXISTS `tbi_producto`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `tbi_producto` BEFORE INSERT ON `producto` FOR EACH ROW BEGIN
@@ -367,7 +372,6 @@ DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 -- Volcando estructura para disparador supermercado.tbu_producto
-DROP TRIGGER IF EXISTS `tbu_producto`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
 DELIMITER //
 CREATE TRIGGER `tbu_producto` BEFORE UPDATE ON `producto` FOR EACH ROW BEGIN
@@ -385,12 +389,7 @@ CREATE TRIGGER `tbu_producto` BEFORE UPDATE ON `producto` FOR EACH ROW BEGIN
 	IF NEW.descuento > 100 THEN 
 		SET NEW.descuento = 100; 
 	END IF;
-/*	
-	-- cada vez que se actualice el precio de un producto, se copiará su nombre y precio en la tabla histórico:
-	IF NEW.precio <> OLD.precio THEN  
-		INSERT INTO historico (precio, fecha, id_producto) VALUES (OLD.precio, ?, ?);
-	END IF;	
-*/
+
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
