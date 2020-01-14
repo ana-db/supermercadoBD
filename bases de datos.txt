@@ -161,7 +161,23 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 - Apache Tomcat 8
 	- apache tomcat para servelts y jsps
-	- versiones: tomcat 8.5, java 8 y servlets 3.01 (se ve en el pom), jsps , versión aplicación 3.0 (ver el web.xml)
+	- versiones: tomcat 8.5, java 1.8 y servlets 3.0.1 (se ve en el pom), jsps 2.2 , versión aplicación 3.0 (ver el web.xml)
+		<!-- variables comunes para todo el POM -->
+		<properties>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<java-version>1.8</java-version>
+			<junit.version>4.12</junit.version>
+			<javax.servlet.api>3.0.1</javax.servlet.api>
+			<javax.servlet.jsp.version>2.2</javax.servlet.jsp.version>
+			<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+		</properties>
+
+		<!-- web.xml -->
+		<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+			http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+			version="3.0">
 
 	- carpetas 
 		- bin 
@@ -172,45 +188,37 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 			con scope podemos tener varias opcones, por ej, provided:
 			<!-- Web Project 3.0 -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-					<artifactId>javax.servlet-api</artifactId>
-			<version>${javax.servlet.api}</version>
-						<scope>provided</scope>  <!-- Nos lo provee el servidor de aplicaciones -->
-		</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${javax.servlet.api}</version>
+				<scope>provided</scope>  <!-- Nos lo provee el servidor de aplicaciones -->
+			</dependency>
 
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>		${javax.servlet.jsp.version}</version>
-			<scope>provided</scope>
-		</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>		${javax.servlet.jsp.version}</version>
+				<scope>provided</scope>
+			</dependency>
 
 		- pom : ficheros de config
 
 	- Habilitar usuario administrador
 
 		<?xml version='1.0' encoding='utf-8'?>
-
 		<tomcat-users>
-
 		<role rolename="manager"/>
-
 		<role rolename="admin"/>
-
 		<user username="tomcat" password="tomcat" roles="admin,manager"/>
-
 		</tomcat-users>
 
-
-		en nuestro ejemplo: http://192.168.0.58:8080 --> http://192.168.0.58:8080/manager/html (manager para levantar y tirar las aplicaiones)
+		en nuestro servidor de producción: http://192.168.0.58:8080 --> http://192.168.0.58:8080/manager/html (manager para levantar y tirar las aplicaiones)
 
 
 	- Abrir Tomcat para poder acceder desde otra IP
 		Comentar la siguiente linea:
-
   		<Valve className="org.apache.catalina.valves.RemoteAddrValve"
-
          	allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
 
 	- documentación de tomcat dentro del proyecto: http://192.168.0.58:8080/docs/
