@@ -126,14 +126,32 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 - Funciones
 	- funciones
 	- Funciones Deterministas o no
-		- AVG: hace la media
-		- determinista si siempre devuelve lo mismo
-		- Uso de las variables en funciones
-		- Ejercicio practico fechas
-			- google: mysql datetime functions --> https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html
-								https://dev.mysql.com/doc/refman/5.7/en/case.html
-				- @@lc_time_names --> lc es local
-				- MONTHNAME() devuelve el nombre del mes en inglés por defecto, NOW() (devuelve la fecha hasta ms), CURDATE(), DIFDATE() da la diferencia entre 2 fechas
+		- determinista si siempre devuelve lo mismo (no determinista si los datos que nos devuelve van cambiando)
+		- Las funciones deterministas devuelven siempre el mismo resultado cada vez que se invocan con un conjunto específico de valores de entrada y cuando el estado de la base de datos es el mismo.
+		- Las funciones no deterministas pueden devolver resultados diferentes cada vez que se llaman con un conjunto específico de valores de entrada aunque el estado de la base de datos a la que tienen acceso permanezca sin cambios. 
+		- Por ejemplo, la función AVG (hace la media) siempre devuelve el mismo resultado pero la función GETDATE, que devuelve el valor datetime actual, siempre devuelve un resultado diferente.
+	
+	- Uso de las variables en funciones
+		- Las variables en las funciones se usan como en los procedimientos almacenados, se declaran con la sentencia DECLARE, y se asignan valores con la sentencia SET.
+
+		DELIMITER //
+
+		CREATE FUNCTION holaMundo() RETURNS VARCHAR(30)
+		BEGIN
+  			DECLARE salida VARCHAR(30) DEFAULT 'Hola mundo';
+			;
+  			SET salida = ‘Hola mundo con variables’;
+  			RETURN salida;
+		END
+		//
+
+	- Ejercicio práctico fechas
+		- Crear una función para que nos retorne el nombre del mes en castellano ( 'enero',febrero',... ). Como parámetro de entrada vamos a recibir un dato de tipo DATE.
+			Pistas: usar función CASE y funciones para fechas:
+			google: mysql datetime functions --> https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html
+							 --> https://dev.mysql.com/doc/refman/5.7/en/case.html
+			- @@lc_time_names --> lc es local
+			- MONTHNAME() devuelve el nombre del mes en inglés por defecto, NOW() (devuelve la fecha hasta ms), CURDATE(), DIFDATE() da la diferencia entre 2 fechas
 
 
 - Triggers - disparadores
@@ -149,7 +167,7 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 	Query OK, 0 rows affected (0.00 sec)
 	mysql> delimiter ;
 
-	comprobamos el parámetro nuevo NEW.age antes de insertarlo en la tabla para coprobar que no sea erróneo
+	comprobamos el parámetro nuevo NEW.age antes de insertarlo en la tabla para asegurarnos de que no sea erróneo
 
 	- OLD y NEW
 
@@ -186,7 +204,7 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 		- lib
 			- .jar son las librerías
 
-			con scope podemos tener varias opcones, por ej, provided:
+			con scope podemos tener varias opciones, por ej, provided:
 			<!-- Web Project 3.0 -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -198,11 +216,15 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 			<dependency>
 				<groupId>javax.servlet.jsp</groupId>
 				<artifactId>jsp-api</artifactId>
-				<version>		${javax.servlet.jsp.version}</version>
+				<version>${javax.servlet.jsp.version}</version>
 				<scope>provided</scope>
 			</dependency>
 
-		- pom : ficheros de config
+		- conf - ficheros XML y los correspondientes DTD para la configuración de Tomcat
+			- pom : son ficheros de config
+		- common: clases comunes que pueden utilizar Catalina y las aplicaciones web
+		- server: clases utilizadas solamente por Catalina
+		- webapps: directorio que contiene las aplicaciones web
 
 	- Habilitar usuario administrador
 
@@ -215,7 +237,6 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 		en nuestro servidor de producción: http://192.168.0.58:8080 --> http://192.168.0.58:8080/manager/html (manager para levantar y tirar las aplicaiones)
 
-
 	- Abrir Tomcat para poder acceder desde otra IP
 		Comentar la siguiente linea:
   		<Valve className="org.apache.catalina.valves.RemoteAddrValve"
@@ -226,10 +247,10 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 
 
 - Para subir a producción:
-	- exportamos nuestra bd de heidi y renombramos como supermercado_AnaCristian el supermercado_grupo para ejecutarla como consulta en el servidor
-	- exportar proyecto eclipse como war file
-		si al exportar seleccionamos export source files también exporta los .java pero no hace falta		
-		los controladores y clases están en classes dentro de WEB-INF
+	- exportamos nuestra bd de heidi y renombramos supermercado_grupo (la bd que usamos en local) como supermercado_AnaCristian para ejecutarla como consulta en el servidor y crear nuestras tablas
+	- exportar proyecto eclipse como war file (vista java --> botón drcho sobre proyecto --> export file)
+		si al exportar seleccionamos "export source files" también exporta los .java pero no hace falta, con marcar la 1a opción de las 2 ya vale	
+		si abrimos el rar, vemos que los controladores y clases están en la carpeta "WEB-INF" --> "classes"
 	- http://192.168.0.58:8080/  --> http://192.168.0.58:8080/manager/html
 		
 
@@ -242,41 +263,61 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 - Views - Vistas o Tablas Virtuales
 	- sólo se hacen consultas, no modificaciones
 	- la vista por debajo lanza una select
-	- son como tablas vistuales: es como hacer una consulta y se guarda en una tabla "virtual"
+	- son como tablas virtuales: es como hacer una consulta y se guarda en una tabla "virtual"
+	- ventajas: 
+		- Se almacenan en el servidor
+		- mayor seguridad: usando vistas no permitimos a nadie acceder directamente a los datos, nosotros elegimos los datos que van a ver
+		- Podemos llamarlas de forma sencilla en una consulta
 	- Información mas detallada sobre vistas --> https://manuales.guebs.com/mysql-5.0/views.html :
 
-La cláusula opcional ALGORITHM es una extensión de MySQL al SQL estándar. ALGORITHM puede tomar tres valores: MERGE, TEMPTABLE, o UNDEFINED. El algoritmo por defecto es UNDEFINED si no se encuentra presente la cláusula ALGORITHM. El algoritmo afecta la manera en que MySQL procesa la vista.
+	La cláusula opcional ALGORITHM es una extensión de MySQL al SQL estándar. ALGORITHM puede tomar tres valores: MERGE, TEMPTABLE, o UNDEFINED. El algoritmo por defecto es UNDEFINED si no se encuentra presente la cláusula ALGORITHM. El algoritmo afecta la manera en que MySQL procesa la vista.
 
-Para MERGE, el texto de una sentencia que haga referencia a la vista y la definición de la vista son mezclados de forma que parte de la definición de la vista reemplaza las partes correspondientes de la consulta.
+	Para MERGE, el texto de una sentencia que haga referencia a la vista y la definición de la vista son mezclados de forma que parte de la definición de la vista reemplaza las partes correspondientes de la consulta.
 
-Para TEMPTABLE, los resultados devueltos por la vista son colocados en una tabla temporal, la cual es luego utilizada para ejecutar la sentencia.
-(es como una foto)
+	Para TEMPTABLE, los resultados devueltos por la vista son colocados en una tabla temporal, la cual es luego utilizada para ejecutar la sentencia.
+	(es como una foto)
 
-Para UNDEFINED, MySQL determina el algoritmo que utilizará. En ese caso se prefiere MERGE por sobre TEMPTABLE si es posible, ya que MERGE por lo general es más eficiente y porque la vista no puede ser actualizable si se emplea una tabla temporal.
+	Para UNDEFINED, MySQL determina el algoritmo que utilizará. En ese caso se prefiere MERGE por sobre TEMPTABLE si es posible, ya que MERGE por lo general es más eficiente y porque la vista no puede ser actualizable si se emplea una tabla temporal.
 
-Una razón para elegir explícitamente TEMPTABLE es que los bloqueos en tablas subyacentes pueden ser liberados despues que la tabla temporal fue creada, y antes de que sea usada para terminar el procesamiento de la sentencia. Esto podría resultar en una liberación del bloqueo más rápida que en el algoritmo MERGE, de modo que otros clientes que utilicen la vista no estarán bloqueados mucho tiempo.
+	Una razón para elegir explícitamente TEMPTABLE es que los bloqueos en tablas subyacentes pueden ser liberados despues que la tabla temporal fue creada, y antes de que sea usada para terminar el procesamiento de la sentencia. Esto podría resultar en una liberación del bloqueo más rápida que en el algoritmo MERGE, de modo que otros clientes que utilicen la vista no estarán bloqueados mucho tiempo.
 
-https://dev.mysql.com/doc/refman/8.0/en/view-algorithms.html 
+	https://dev.mysql.com/doc/refman/8.0/en/view-algorithms.html 
 
 
 	- ver words "20200115 Consultas vistas Heidi" / Ana Consultas vistas Heidi (entregado)
 
-
-	¿por qué un pa tiene delimiter y la vista no?
+	- ¿por qué un procedimiento almacenado tiene delimiter y la vista no?
 	porque el pa podría tener sentencias que ocasionasen errores y las vistas no
+	Una diferencia entre vistas y pas es que las primeras no aceptan parámetros, y los procedimientos almacenados sí.
+	Un procedimiento almacenado suele utilizarse cuando no es suficiente una simple consulta sql. Los procedimientos almacenados contienen variables, bucles y llamadas a otros procedimientos almacenados.
 
 
 	usuario/password: desarrollador desarrollador
 
 
-
 - Diferencias Where y Having
-	- la diferencia fundamental entre WHERE y HAVING es la siguente: WHERE selecciona las filas a mostrar antes de que sean agrupadas o procesadas por una funcion de agregacion, mientras HAVING selecciona las filas despues de que estas hayan sido procesadas o computadas, por lo tanto, la clausula WHERE no debe contener funciones de agrupacion o agregacion, mientras que la clausula HAVING siempre contiene funciones de agregacion, es permitido escribir clausulas HAVING que no contengan agrupacion
+	- la diferencia fundamental entre WHERE y HAVING es la siguente: 
+		WHERE selecciona las filas a mostrar antes de que sean agrupadas o procesadas por una funcion de agregacion, 
+		mientras HAVING selecciona las filas despues de que estas hayan sido procesadas o computadas, 
+		por lo tanto, la clausula WHERE NO DEBE CONTENER FUNCIONES DE AGREGACIÓN o agrupacion, 
+		mientras que la clausula HAVING siempre contiene funciones de agregacion, es permitido escribir clausulas HAVING que no contengan agrupacion.
+	
 	- Funciones de agregación
-		Las funciones de agregación en SQL nos permiten efectuar operaciones sobre un conjunto de resultados, pero devolviendo un único valor agregado para todos ellos. Es decir, nos permiten obtener medias, máximos, etc... sobre un conjunto de valores.
+		- devuelven una sola fila, salvo que vayan unidas a la cláusula GROUP BY.
+		- nos permiten efectuar operaciones sobre un conjunto de resultados, pero devolviendo un único valor agregado para todos ellos. Es decir, nos permiten obtener medias, máximos, etc... sobre un conjunto de valores.
+	
+	- Agrupación ( Having )
+		- Especifica una condición que debe cumplirse para que los datos sean devueltos por la consulta. 
+		- Su funcionamiento es similar al de WHERE pero aplicado al conjunto de resultados devueltos por la consulta. 
+		- Debe aplicarse siempre junto a GROUP BY y la condición debe estar referida a los campos contenidos en ella.
 
-	- grupo by --> https://stackoverflow.com/questions/47903247/mysql-group-by-non-aggregate-column
+	- group by --> https://stackoverflow.com/questions/47903247/mysql-group-by-non-aggregate-column
+
+- Creamos una base de datos (iparcsec) y vamos haciendo consultas
 
 
+-----
 
-CRUD_productos_y_usuarios_roles_seguridad_en_ProductoDAO_byUser
+Usamos los siguientes puertos: 
+	- aplicaciones web: 8080
+	- acceso a bases de datos: 3306
