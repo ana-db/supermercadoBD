@@ -1,4 +1,43 @@
--- datos estadísticos por departamento (num de empleados por departamento) 
+-- 0.1) sueldo MAX, MIN, MEDIA por departamento 
+/*
+SELECT 
+	d.id,
+	d.nombre,
+	COUNT(*) AS 'num_personas',
+	ROUND(MAX(sueldo),2) AS 'sueldo_maximo',
+	ROUND(MIN(sueldo),2) AS 'sueldo_minimo',
+	ROUND(AVG(sueldo),2) AS 'sueldo_medio'
+FROM
+	departamento d, empleado e
+WHERE
+	d.id = e.id_departamento
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
+-- 0.2) total trabajadores, edad MAX, MIN, MEDIA y sueldo total
+/*
+SELECT 
+	d.id,
+	d.nombre,
+	COUNT(*) AS 'num_trabajadores',
+	ROUND(MAX(edad),2) AS 'edad_max',
+	ROUND(MIN(edad),2) AS 'edad_min',
+	ROUND(AVG(edad),2) AS 'edad_media',
+	ROUND(SUM(sueldo),2) AS 'sueldo_total'
+FROM
+	departamento d, empleado e
+WHERE
+	d.id = e.id_departamento
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
+-- 1) datos estadísticos por departamento (num de empleados por departamento) 
 /*
 SELECT 
 	d.nombre AS 'departamento',
@@ -9,10 +48,8 @@ GROUP BY id_departamento
 ORDER BY empleados DESC
 ;
 */
--- sueldo MAX, MIN, MEDIA por departamento 
 
-
--- listado personas ordenados alfabeticamente por nombre, con puesto y departamento
+-- 2) listado personas ordenados alfabeticamente por nombre, con y departamento
 /*
 SELECT 
 	e.nombre AS 'empleado',
@@ -29,7 +66,7 @@ LIMIT 20
 ;
 */
 
--- listado personas ordenados alfabeticamente por nombre DEPARTAMENTO y PERSONA (sin agrupación), con puesto y departamento 
+-- 3) listado personas ordenados alfabeticamente por nombre DEPARTAMENTO y PERSONA (sin agrupación), con puesto y departamento 
 /*
 SELECT 
 	e.nombre AS 'empleado',
@@ -45,41 +82,124 @@ LIMIT 20
 ;
 */
 
--- persona que más cobra de sueldo
+-- 4) persona que más cobra de sueldo
+/*
+-- esta consulta calculando MAX(sueldo) estaba mal,
+-- nos saca el sueldo máximo (64000) pero para otro empleado (Raul 25000, que es el 1er registro de la tabla)
+SELECT 
+	nombre,
+	MAX(sueldo) AS 'sueldo_mas_alto',
+	sueldo
+FROM 
+	empleado
+ORDER BY nombre ASC
+LIMIT 1
+;
+*/
+/*
+-- lo correcto es hacer un ORDER BY sueldo DESC y nos saca a Iñigo 64000
+SELECT 
+	nombre,
+	sueldo
+FROM 
+	empleado
+ORDER BY sueldo DESC
+LIMIT 1
+*/
+
+-- 5) persona que más cobra de sueldo + primas siempre que meta más de 10 horas extra
 /*
 SELECT 
 	nombre,
-	ROUND(MAX(sueldo), 2) AS 'sueldo_mas_alto'
+	horas_extra,
+	sueldo, primas,
+	sueldo + primas AS 'sueldo_mas_primas'
 FROM 
 	empleado
+WHERE
+	horas_extra >= 10
+ORDER BY sueldo_mas_primas DESC
+LIMIT 1
+;
+*/
+
+-- 6) listado departamentos ordenados alfabeticamente 
+/*
+SELECT 
+	nombre
+FROM 
+	departamento
 ORDER BY nombre ASC
 LIMIT 20
 ;
 */
 
--- persona que más cobra de sueldo + primas siempre que meta más de 10 horas extra
+-- 7) listado de los sueldos medios por departamento (practicar luego con having)
+/*
+-- usando WHERE
 SELECT 
-	nombre,
-	horas_extra
-	ROUND(MAX(sueldo+primas), 2) AS 'sueldo_mas_primas_mas_alto'
+	d.nombre AS 'departamento', 
+	ROUND(AVG(sueldo),2) AS 'sueldo_medio'
 FROM 
-	empleado
-ORDER BY nombre ASC
-LIMIT 20
+	departamento d, empleado e
+WHERE
+	e.id_departamento = d.id
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
 ;
+*/
+/*
+-- usando HAVING. Partiendo de los resultados de la consulta anterior, 
+-- seleccionamos los departamentos con la media de sueldo < 18000 y obtenemos mantenimiento y oficinas
+SELECT 
+	ROUND(AVG(sueldo),2) AS 'sueldo_medio',
+	d.nombre AS 'departamento'
+FROM 
+	departamento d, empleado e
+WHERE
+	e.id_departamento = d.id
+GROUP BY d.nombre
+HAVING ROUND(AVG(sueldo),2) < 18000
+ORDER BY ROUND(AVG(sueldo),2)
+LIMIT 7
+;	
+*/
 
--- listado departamentos ordenados alfabeticamente 
+-- 8) media de edad y sueldo por departamento
 /*
 SELECT 
-	nombre,
+	d.nombre AS 'departamento',
+	ROUND(AVG(edad),2) AS 'edad_media',
+	ROUND(AVG(sueldo),2) AS 'sueldo_medio'
 FROM 
-	departamento
-ORDER BY nombre ASC
-LIMIT 20
-;*/
+	departamento d, empleado e
+WHERE
+	e.id_departamento = d.id
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
 
--- listado de los sueldos medios por departamento (practicar luego con having)
-
--- media de edad y sueldo por departamento
-
--- listado de departamentos y nombre de la persona que más cobra de cada departamento (subconsulta)
+-- 9) listado de departamentos y nombre de la persona que más cobra de cada departamento (subconsulta)
+SELECT 
+	d.nombre AS 'departamento',
+	e.nombre  AS 'empleado',
+	sueldo
+FROM 
+	empleado e, departamento d
+WHERE
+	e.id_departamento = d.id AND
+	e.nombre = (
+	SELECT 
+		nombre
+	FROM 
+		empleado e
+	ORDER BY e.nombre ASC
+	LIMIT 1
+	)
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
