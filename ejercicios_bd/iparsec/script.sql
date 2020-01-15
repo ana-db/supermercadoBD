@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `departamento` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla iparcsec.departamento: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla iparcsec.departamento: ~5 rows (aproximadamente)
 DELETE FROM `departamento`;
 /*!40000 ALTER TABLE `departamento` DISABLE KEYS */;
 INSERT INTO `departamento` (`id`, `nombre`) VALUES
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `empleado` (
   CONSTRAINT `FK_puesto` FOREIGN KEY (`id_puesto`) REFERENCES `puesto` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla iparcsec.empleado: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla iparcsec.empleado: ~14 rows (aproximadamente)
 DELETE FROM `empleado`;
 /*!40000 ALTER TABLE `empleado` DISABLE KEYS */;
 INSERT INTO `empleado` (`id`, `nombre`, `edad`, `sueldo`, `primas`, `horas_extra`, `id_departamento`, `id_puesto`) VALUES
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `puesto` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla iparcsec.puesto: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla iparcsec.puesto: ~9 rows (aproximadamente)
 DELETE FROM `puesto`;
 /*!40000 ALTER TABLE `puesto` DISABLE KEYS */;
 INSERT INTO `puesto` (`id`, `nombre`) VALUES
