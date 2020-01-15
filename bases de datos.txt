@@ -234,8 +234,48 @@ MF0966_3 - Consulta y manipulación de información contenida en gestores de datos
 		
 
 
+-------------------------------------------------------------------
 
 
+15/01/2020:
+
+- Views - Vistas o Tablas Virtuales
+	- sólo se hacen consultas, no modificaciones
+	- la vista por debajo lanza una select
+	- son como tablas vistuales: es como hacer una consulta y se guarda en una tabla "virtual"
+	- Información mas detallada sobre vistas --> https://manuales.guebs.com/mysql-5.0/views.html :
+
+La cláusula opcional ALGORITHM es una extensión de MySQL al SQL estándar. ALGORITHM puede tomar tres valores: MERGE, TEMPTABLE, o UNDEFINED. El algoritmo por defecto es UNDEFINED si no se encuentra presente la cláusula ALGORITHM. El algoritmo afecta la manera en que MySQL procesa la vista.
+
+Para MERGE, el texto de una sentencia que haga referencia a la vista y la definición de la vista son mezclados de forma que parte de la definición de la vista reemplaza las partes correspondientes de la consulta.
+
+Para TEMPTABLE, los resultados devueltos por la vista son colocados en una tabla temporal, la cual es luego utilizada para ejecutar la sentencia.
+(es como una foto)
+
+Para UNDEFINED, MySQL determina el algoritmo que utilizará. En ese caso se prefiere MERGE por sobre TEMPTABLE si es posible, ya que MERGE por lo general es más eficiente y porque la vista no puede ser actualizable si se emplea una tabla temporal.
+
+Una razón para elegir explícitamente TEMPTABLE es que los bloqueos en tablas subyacentes pueden ser liberados despues que la tabla temporal fue creada, y antes de que sea usada para terminar el procesamiento de la sentencia. Esto podría resultar en una liberación del bloqueo más rápida que en el algoritmo MERGE, de modo que otros clientes que utilicen la vista no estarán bloqueados mucho tiempo.
+
+https://dev.mysql.com/doc/refman/8.0/en/view-algorithms.html 
+
+
+	- ver words "20200115 Consultas vistas Heidi" / Ana Consultas vistas Heidi (entregado)
+
+
+	¿por qué un pa tiene delimiter y la vista no?
+	porque el pa podría tener sentencias que ocasionasen errores y las vistas no
+
+
+	usuario/password: desarrollador desarrollador
+
+
+
+- Diferencias Where y Having
+	- la diferencia fundamental entre WHERE y HAVING es la siguente: WHERE selecciona las filas a mostrar antes de que sean agrupadas o procesadas por una funcion de agregacion, mientras HAVING selecciona las filas despues de que estas hayan sido procesadas o computadas, por lo tanto, la clausula WHERE no debe contener funciones de agrupacion o agregacion, mientras que la clausula HAVING siempre contiene funciones de agregacion, es permitido escribir clausulas HAVING que no contengan agrupacion
+	- Funciones de agregación
+		Las funciones de agregación en SQL nos permiten efectuar operaciones sobre un conjunto de resultados, pero devolviendo un único valor agregado para todos ellos. Es decir, nos permiten obtener medias, máximos, etc... sobre un conjunto de valores.
+
+	- grupo by --> https://stackoverflow.com/questions/47903247/mysql-group-by-non-aggregate-column
 
 
 
