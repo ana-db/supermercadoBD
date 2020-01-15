@@ -1,0 +1,85 @@
+-- datos estadísticos por departamento (num de empleados por departamento) 
+/*
+SELECT 
+	d.nombre AS 'departamento',
+	COUNT(*) AS 'empleados'
+FROM 
+	empleado e INNER JOIN departamento d ON e.id_departamento = d.id
+GROUP BY id_departamento
+ORDER BY empleados DESC
+;
+*/
+-- sueldo MAX, MIN, MEDIA por departamento 
+
+
+-- listado personas ordenados alfabeticamente por nombre, con puesto y departamento
+/*
+SELECT 
+	e.nombre AS 'empleado',
+	p.nombre AS 'puesto',
+	d.nombre AS 'departamento'
+FROM 
+	empleado e, departamento d, puesto p
+WHERE 
+	e.id_departamento = d.id AND
+	e.id_puesto = p.id
+-- GROUP BY id_departamento
+ORDER BY e.nombre ASC
+LIMIT 20
+;
+*/
+
+-- listado personas ordenados alfabeticamente por nombre DEPARTAMENTO y PERSONA (sin agrupación), con puesto y departamento 
+/*
+SELECT 
+	e.nombre AS 'empleado',
+	p.nombre AS 'puesto',
+	d.nombre AS 'departamento'
+FROM 
+	empleado e, departamento d, puesto p
+WHERE 
+	e.id_departamento = d.id AND
+	e.id_puesto = p.id
+ORDER BY d.nombre, e.nombre ASC
+LIMIT 20
+;
+*/
+
+-- persona que más cobra de sueldo
+/*
+SELECT 
+	nombre,
+	ROUND(MAX(sueldo), 2) AS 'sueldo_mas_alto'
+FROM 
+	empleado
+ORDER BY nombre ASC
+LIMIT 20
+;
+*/
+
+-- persona que más cobra de sueldo + primas siempre que meta más de 10 horas extra
+SELECT 
+	nombre,
+	horas_extra
+	ROUND(MAX(sueldo+primas), 2) AS 'sueldo_mas_primas_mas_alto'
+FROM 
+	empleado
+ORDER BY nombre ASC
+LIMIT 20
+;
+
+-- listado departamentos ordenados alfabeticamente 
+/*
+SELECT 
+	nombre,
+FROM 
+	departamento
+ORDER BY nombre ASC
+LIMIT 20
+;*/
+
+-- listado de los sueldos medios por departamento (practicar luego con having)
+
+-- media de edad y sueldo por departamento
+
+-- listado de departamentos y nombre de la persona que más cobra de cada departamento (subconsulta)
