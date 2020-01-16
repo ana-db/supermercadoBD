@@ -49,7 +49,7 @@ ORDER BY empleados DESC
 ;
 */
 
--- 2) listado personas ordenados alfabeticamente por nombre, con y departamento
+-- 2) listado personas ordenados alfabeticamente por nombre, con puesto y departamento
 /*
 SELECT 
 	e.nombre AS 'empleado',
@@ -61,6 +61,19 @@ WHERE
 	e.id_departamento = d.id AND
 	e.id_puesto = p.id
 -- GROUP BY id_departamento
+ORDER BY e.nombre ASC
+LIMIT 20
+;
+*/
+/*
+-- con join explícita:
+SELECT 
+	e.nombre AS 'empleado',
+	p.nombre AS 'puesto',
+	d.nombre AS 'departamento'
+FROM 
+	( empleado e INNER JOIN departamento d ON e.id_departamento = d.id )
+	INNER JOIN puesto p ON e.id_puesto = p.id
 ORDER BY e.nombre ASC
 LIMIT 20
 ;
@@ -105,6 +118,17 @@ FROM
 	empleado
 ORDER BY sueldo DESC
 LIMIT 1
+;
+*/
+
+-- corregido con subconsulta:
+/*
+SELECT 
+	sueldo,
+	nombre
+FROM 
+	empleado	
+WHERE sueldo = ( SELECT MAX( sueldo) FROM empleado )	;
 */
 
 -- 5) persona que más cobra de sueldo + primas siempre que meta más de 10 horas extra
@@ -120,6 +144,23 @@ WHERE
 	horas_extra >= 10
 ORDER BY sueldo_mas_primas DESC
 LIMIT 1
+;
+*/
+
+/*
+-- corregido con subconsulta:
+SELECT 
+	nombre,
+	horas_extra,
+	sueldo, primas,
+	sueldo + primas AS 'salario_total'
+FROM 
+	empleado
+WHERE
+	sueldo = (SELECT MAX(sueldo) FROM empleado) AND 
+	horas_extra >= 10
+ORDER BY salario_total DESC
+LIMIT 5
 ;
 */
 
@@ -166,6 +207,19 @@ LIMIT 7
 ;	
 */
 
+/*
+-- si queremos sacar phyton
+SELECT 
+	d.nombre AS 'departamento', 
+	IFNULL(ROUND(AVG(sueldo),2),0) AS 'sueldo_medio'
+FROM 
+	departamento d LEFT JOIN empleado e ON d.id = e.id_departamento
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
 -- 8) media de edad y sueldo por departamento
 /*
 SELECT 
@@ -182,23 +236,93 @@ LIMIT 7
 ;
 */
 
--- 9) listado de departamentos y nombre de la persona que más cobra de cada departamento (subconsulta)
+/*
+-- si queremos sacar phyton
 SELECT 
 	d.nombre AS 'departamento',
-	e.nombre  AS 'empleado',
-	sueldo
+	IFNULL(ROUND(AVG(edad),2),0) AS 'edad_media',
+	IFNULL(ROUND(AVG(sueldo),2),0) AS 'sueldo_medio'
+FROM 
+	departamento d LEFT JOIN empleado e ON d.id = e.id_departamento
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
+-- 9) listado de departamentos y nombre de la persona que más cobra de cada departamento (subconsulta)
+/*
+SELECT 
+	d.nombre AS 'departamento',
+	COUNT(*) AS 'empleado',
+	MAX(sueldo) AS 'sueldo_max', 
+	(
+		SELECT 
+			nombre
+		FROM
+			empleado
+		WHERE
+			id_departamento = d.id
+		ORDER BY sueldo DESC
+		LIMIT 1
+	) AS 'empleado'
 FROM 
 	empleado e, departamento d
 WHERE
-	e.id_departamento = d.id AND
-	e.nombre = (
-	SELECT 
-		nombre
-	FROM 
-		empleado e
-	ORDER BY e.nombre ASC
-	LIMIT 1
-	)
+	e.id_departamento = d.id 
+GROUP BY id_departamento
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
+-- la subconsulta sería: 
+/*
+SELECT 
+	nombre,
+	sueldo
+FROM
+	empleado
+WHERE
+	id_departamento = 3
+ORDER BY sueldo DESC
+LIMIT 1;
+*/
+
+
+
+-- 10) sacamos todos los departamentos aunque no tengan empleado
+-- COUNT(e.id) en lugar de COUNT(*)  para que no nos cuente el nulo como 1 empleado
+
+-- INSERT INTO departamento (nombre) VALUE ('phyton');
+/*
+SELECT 
+	d.id,
+	d.nombre,
+	COUNT(e.id) AS 'num_personas',
+	ROUND(MAX(sueldo),2) AS 'sueldo_maximo',
+	ROUND(MIN(sueldo),2) AS 'sueldo_minimo',
+	ROUND(AVG(sueldo),2) AS 'sueldo_medio',
+	ROUND(SUM(sueldo),2) AS 'sueldo_total'
+FROM
+	empleado e RIGHT JOIN departamento d ON d.id = e.id_departamento	
+GROUP BY d.nombre
+ORDER BY d.nombre ASC
+LIMIT 7
+;
+*/
+
+-- sustituimos null por 0:
+SELECT 
+	d.id,
+	d.nombre,
+	COUNT(e.id) AS 'num_personas',
+	IFNULL(ROUND(MAX(sueldo),2),0) AS 'sueldo_maximo',
+	IFNULL(ROUND(MIN(sueldo),2),0) AS 'sueldo_minimo',
+	IFNULL(ROUND(AVG(sueldo),2),0) AS 'sueldo_medio',
+	IFNULL(ROUND(SUM(sueldo),2),0) AS 'sueldo_total'
+FROM
+	empleado e RIGHT JOIN departamento d ON d.id = e.id_departamento	
 GROUP BY d.nombre
 ORDER BY d.nombre ASC
 LIMIT 7

@@ -1,0 +1,89 @@
+-- datos estadisticos por departamento
+SELECT 
+	d.nombre as 'departamento',
+	COUNT(*) as 'empleados',
+	ROUND(MAX(sueldo),2) as 'salario_maximo',
+	ROUND(MIN(sueldo),2) as 'salario_minimo',
+	ROUND(SUM(sueldo),2) as 'salario_total',
+	ROUND(AVG(sueldo),2) as 'salario_media'
+FROM
+	empleado e INNER JOIN departamento d ON e.id_departamento = d.id
+GROUP BY id_departamento	
+ORDER BY empleados DESC;
+
+		
+
+-- listado personas ordenados alfabeticamente por nombre, con puesto y departamento
+
+SELECT
+	*
+FROM 
+	empleado e	INNER JOIN departamento d ON e.id_departamento = d.id 
+	INNER JOIN puesto p ON e.id_puesto = p.id
+ORDER BY e.nombre ASC;	
+
+-- listado personas ordenados alfabeticamente por nombre DEPARTAMENTO y PERSONA, con puesto y departamento
+SELECT
+	d.nombre as 'departamento',
+	e.nombre as 'empleado',
+	p.nombre as 'puesto'
+
+FROM 
+	empleado e	INNER JOIN departamento d ON e.id_departamento = d.id 
+	INNER JOIN puesto p ON e.id_puesto = p.id
+ORDER BY d.nombre, e.nombre ASC;	
+
+-- persona que mas cobra de sueldo
+
+SELECT 
+	sueldo,
+	nombre
+FROM 
+	empleado	
+WHERE sueldo = ( SELECT MAX( sueldo) FROM empleado )	;
+
+
+-- persona que mas cobra de sueldo + primas siempre que meta mas  de 10 horas extra
+
+SELECT 
+	(sueldo + primas) as 'salario_total',
+	sueldo,
+	primas,
+	horas_extras,
+	nombre
+FROM 
+	empleado	
+WHERE
+	horas_extras > 9	
+ORDER BY salario_total DESC LIMIT 1;
+
+-- listado departamentos ordenados alfabeticamente
+
+-- listado sueldos medios pro departamento, practicar luego con having
+SELECT
+ d.nombre,
+ IFNULL(ROUND(AVG(sueldo),2),0) as 'sueldo_medio'
+FROM 
+	departamento d LEFT JOIN empleado e ON d.id = e.id_departamento
+GROUP BY d.id;	
+
+-- media de edad y sueldo por departamento
+SELECT
+ d.nombre,
+ IFNULL(ROUND(AVG(sueldo),2),0) as 'sueldo_medio',
+ ROUND(AVG(edad),0) as 'edad' 
+FROM 
+	departamento d LEFT JOIN empleado e ON d.id = e.id_departamento
+GROUP BY d.id;		
+
+-- listado departmanetos y nombre de la persona que mas cobra
+
+SELECT 
+	d.nombre as 'departamento',
+	COUNT(*) as 'empleados',
+	MAX(sueldo) as 'sueldo',
+	( SELECT nombre FROM empleado WHERE id_departamento = d.id ORDER BY sueldo DESC LIMIT 1 ) as'empleado'
+FROM
+	empleado e INNER JOIN departamento d ON e.id_departamento = d.id
+GROUP BY id_departamento	
+ORDER BY empleados DESC;

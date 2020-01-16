@@ -23,9 +23,9 @@ CREATE TABLE IF NOT EXISTS `departamento` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Volcando datos para la tabla iparcsec.departamento: ~5 rows (aproximadamente)
+-- Volcando datos para la tabla iparcsec.departamento: ~6 rows (aproximadamente)
 DELETE FROM `departamento`;
 /*!40000 ALTER TABLE `departamento` DISABLE KEYS */;
 INSERT INTO `departamento` (`id`, `nombre`) VALUES
@@ -33,7 +33,8 @@ INSERT INTO `departamento` (`id`, `nombre`) VALUES
 	(2, 'oficinas'),
 	(3, 'java'),
 	(4, 'sistemas'),
-	(5, 'mantenimiento');
+	(5, 'mantenimiento'),
+	(6, 'phyton');
 /*!40000 ALTER TABLE `departamento` ENABLE KEYS */;
 
 -- Volcando estructura para tabla iparcsec.empleado
@@ -66,7 +67,7 @@ INSERT INTO `empleado` (`id`, `nombre`, `edad`, `sueldo`, `primas`, `horas_extra
 	(6, 'Aitor', 24, 35000, 1000, 0, 2, 4),
 	(7, 'Endika', 25, 24000, 150, 5, 3, 1),
 	(8, 'Kiryl', 22, 40000, 500, 5, 4, 5),
-	(9, 'Inigo', 23, 64000, 800, 40, 4, 3),
+	(9, 'Inigo', 23, 40000, 800, 40, 4, 3),
 	(16, 'Ana', 30, 24000, 150, 5, 3, 1),
 	(17, 'Cristian', 25, 12000, 0, 10, 5, 6),
 	(18, 'Mikel', 29, 24000, 500, 10, 3, 7),
