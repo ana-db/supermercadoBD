@@ -1,0 +1,40 @@
+Modelo Datos Harry Potter
+
+Se quiere diseñar una base de datos para la prestigiosa escuela de magia Howards, con el fin de gestionar la información sobre ciertos aspectos de la escuela y de sus alumnos y profesores.
+
+Con todo esto de cada alumno interesa saber su nombre, apellidos, número de mago, año de nacimiento, a qué casa fue asignado por el sombrero seleccionador y cuál es su habitación, teniendo en cuenta que las habitaciones las comparten con más alumnos de la escuela.
+
+De las habitaciones solo nos interesa saber el número de camas totales que tiene y su ubicación dentro de la escuela.
+
+De los profesores necesitamos saber su nombre y que materia imparte, teniendo en cuenta que un profesor puede cambiar de materia de un año a otro. Los profesores también podrán ser jefes de una de las 4 casas de Howards.
+
+Gryffindor  - Godric Gryffindor ( Fundador )
+Hufflepuff   - Helga Hufflepuff (Fundadora)
+Ravenclaw  - Rowena Ravenclaw (Fundadora)
+Slytherin     - Salazar Slytherin (Fundador)
+Obviamente también tenemos que saber la nota de cada uno de los alumnos en las diferentes materias en el curso, donde también debe quedar reflejado el profesor que ha impartido la materia. Con lo que en un curso debería quedar constancia del alumno, la materia, profesor que ha impartido dicha materia, nota y año del curso.
+
+Todos los estudiantes de Hogwarts deben de estudiar al menos 5 de las 7 asignaturas posibles: Transformaciones, Encantamientos, Pociones, Historia de la Magia, Defensa Contra las Artes Oscuras, Astronomía y Herbología. 
+
+Por ultimo también se quiere guardar un historial de los partidos de Quidich que se juegan, de los cuales es preciso saber las casas que se han enfrentado, los alumnos que han participado en dicho partido, la fecha, el resultado y que alumno ha sido el MVP del partido. Además cada partido lo arbitra un profesor.
+
+
+Ejercicio a entregar
+
+
+Diseño relacional de la base de datos con Workbench                                       -  2,5 puntos
+Script para crear esquema de la base de datos con todas sus tablas y datos    -  2,5 puntos
+Fichero de texto con las consultas a realizar ( Apéndice 1 )                                -  5,0 puntos
+
+Apéndice 1 - Consultas a realizar
+
+
+1. Alumno con mejor nota en cada materia de este año
+
+2. Profesor que ha impartido una materia en un año concreto (por ejemplo profesor de defensa contra artes oscuras en 2017)
+
+3. Listado de los 3 alumnos con más MVPs en los partidos de Quidich. 
+
+4. Nota media de los alumnos para una materia y un año.
+
+5. Nota media de los alumnos de cada una de las casas por materia.
