@@ -145,7 +145,7 @@
 		            
 		            
 		            <!-- --------------------------------------------------------------------------------------------------------- -->
-		            <!-- FILTRO BUSCADOR CATEGORÍAS -->	       			
+		            <!-- FILTRO BUSCADOR CATEGORÍAS (lo hacemos en el body del index.html) 	       			
         			<li class="nav-item">
 						<div class="dropdown">
 						  <button class="btn dropdown-toggle bg-primary text-white" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Buscador categorias </button>
@@ -167,7 +167,7 @@
 						  </div>
 						</div>
 					</li>
-		            
+		            -->
 		            <!-- --------------------------------------------------------------------------------------------------------- -->
 	       
 	            </ul>

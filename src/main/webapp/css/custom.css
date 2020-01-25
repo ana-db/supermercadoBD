@@ -203,3 +203,44 @@ ul, ol {
 	font-size: 1em;
     text-decoration: none; /* quita la línea de subrayado del link */
 }
+
+
+
+/* Search, buscador/filtro
+********************/
+
+.search-wrapper .form-group {
+    margin-bottom: 0px;
+}
+
+.search-wrapper form {
+	background-color: #007bffb8;
+    color: #ffffff;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.search-wrapper .form-control {
+	max-width: 200px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.search-wrapper button {
+	background-color: transparent;
+    border: 0;
+    font-size: 24px;
+}
+
+
+@media (max-width: 991px) { 
+	
+	.search-wrapper .form-group {
+    	text-align: center;
+	}
+
+ }
+
