@@ -12,10 +12,9 @@ LIMIT 11
 ;
 */
 
--- 1. Alumno con mejor nota en cada materia de este año (NO ESTÁ BIEN)
+-- 1. Alumno con mejor nota en cada materia de este año (NO ESTÁ BIEN DEL TODO, ALGUNA ASIGNATURA REPE)
 SELECT  
 	asig.nombre AS 'asignatura',
-	COUNT(*) AS 'total alumnos',
 	anio_curso,
 	MAX(nota) AS 'mejor nota', 
 	(
@@ -32,7 +31,8 @@ FROM
 	alumno a, curso c, asignatura asig
 WHERE
 	a.id = c.id_alumno AND c.id_asignatura = asig.id AND c.anio_curso = 1996 
-GROUP BY asig.nombre
+GROUP BY asig.nombre, a.nombre
+-- HAVING COUNT(asig.nombre) = ( Select DISTINCT COUNT(asig.id) )
 ORDER BY nota DESC
 LIMIT 7
 ;
@@ -101,7 +101,7 @@ LIMIT 11
 ;
 
 
--- 5. Nota media de los alumnos de cada una de las casas por materia. (NO ESTÁ BIEN)
+-- 5. Nota media de los alumnos de cada una de las casas por materia. 
 
 SELECT  
 	ca.nombre AS 'casa', 
@@ -121,7 +121,7 @@ FROM
 	asignatura asig, curso cu, casa ca, alumno al
 WHERE
 	asig.id = cu.id_asignatura AND al.id = cu.id_alumno AND al.id_casa = ca.id 
-GROUP BY asig.nombre
+GROUP BY ca.nombre, asig.nombre
 ORDER BY ca.nombre, asig.nombre ASC
 LIMIT 10
 ;
